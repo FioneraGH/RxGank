@@ -7,6 +7,7 @@ import com.fionera.base.activity.BaseActivity;
 import com.fionera.base.util.ShowToast;
 import com.fionera.rxgank.R;
 import com.fionera.rxgank.fragment.GankFragment;
+import com.jakewharton.rxbinding.view.RxView;
 
 import java.util.concurrent.TimeUnit;
 

@@ -39,7 +39,7 @@ public class Api {
         Cache cache = new Cache(cacheFile, 1024 * 1024 * 10);
 
         OkHttpClient.Builder builder = new OkHttpClient.Builder().connectTimeout(CONNECT_TIMEOUT,
-                TimeUnit.SECONDS).cache(cache);
+                TimeUnit.SECONDS).addInterceptor(new LogInterceptor()).cache(cache);
 
         Retrofit retrofit = new Retrofit.Builder().client(builder.build()).baseUrl(
                 HttpConstants.BASE_URL).addConverterFactory(GsonConverterFactory.create())
