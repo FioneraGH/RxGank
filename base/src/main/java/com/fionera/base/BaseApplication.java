@@ -19,4 +19,10 @@ public class BaseApplication
     public static int screenHeight;
     public static float screenDensity;
     public static float scaledDensity;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        instance = this;
+    }
 }
