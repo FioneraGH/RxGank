@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import com.fionera.base.activity.BaseActivity;
 import com.fionera.base.util.ShowToast;
 import com.fionera.rxgank.R;
+import com.fionera.rxgank.fragment.GankFragment;
 
 import java.util.concurrent.TimeUnit;
 
@@ -28,6 +29,9 @@ public class MainActivity
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                GankFragment.getInstance()).commitAllowingStateLoss();
 
         lifecycle.asObservable().throttleFirst(TIME_TO_EXIT, TimeUnit.MILLISECONDS,
                 AndroidSchedulers.mainThread()).subscribe(new Action1<Void>() {
