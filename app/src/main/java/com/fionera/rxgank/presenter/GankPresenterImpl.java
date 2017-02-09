@@ -34,7 +34,7 @@ public class GankPresenterImpl
 
     private GankView gankView;
     private RequestParams requestParams;
-    protected Subject<Void, Void> lifecycle = new SerializedSubject<>(
+    private Subject<Void, Void> lifecycle = new SerializedSubject<>(
             PublishSubject.<Void>create());
 
     public GankPresenterImpl(GankView view) {
@@ -74,7 +74,6 @@ public class GankPresenterImpl
     private void getGankDayList(final boolean isLoadMore) {
         Api.getInstance().getApiService().getGankDay(requestParams.year, requestParams.month,
                 requestParams.day).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).filter(
-
                 new Func1<GankDay, Boolean>() {
                     @Override
                     public Boolean call(GankDay gankDay) {
@@ -139,7 +138,12 @@ public class GankPresenterImpl
 
     private void processRequestResult(List<Object> list, boolean isLoadMore) {
         if (!requestParams.isComplete()) {
-            getGankDayList(isLoadMore);
+            processGirls(list);
+            gankView.onSuccess(list, isLoadMore);
+            /*
+            here to fetch 3 days
+             */
+            getGankDayList(true);
         } else {
             requestParams.onComplete();
             if (Utils.notEmpty(list)) {
