@@ -4,23 +4,24 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import com.fionera.base.util.ShowToast;
 import com.fionera.base.widget.AutoRecyclerView;
 import com.fionera.rxgank.R;
 import com.fionera.rxgank.adapter.GankDayAdapter;
 import com.fionera.rxgank.contract.GankContract;
-import com.fionera.rxgank.model.GankItemGirl;
+import com.fionera.rxgank.entity.GankItemGirl;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
+import jp.wasabeef.recyclerview.adapters.SlideInBottomAnimationAdapter;
+import jp.wasabeef.recyclerview.animators.FadeInDownAnimator;
 
 /**
  * GankView
@@ -74,7 +75,10 @@ public class GankView
         });
 
         rvGankDay.setLayoutManager(new LinearLayoutManager(context));
-        rvGankDay.setAdapter(new GankDayAdapter(context, gankDayList));
+        GankDayAdapter gankDayAdapter = new GankDayAdapter(context, gankDayList);
+        AlphaInAnimationAdapter alphaInAnimationAdapter = new AlphaInAnimationAdapter(gankDayAdapter);
+        SlideInBottomAnimationAdapter slideInBottomAnimationAdapter = new SlideInBottomAnimationAdapter(alphaInAnimationAdapter);
+        rvGankDay.setAdapter(slideInBottomAnimationAdapter);
         rvGankDay.setLoadDataListener(new AutoRecyclerView.LoadDataListener() {
             @Override
             public void onLoadMore() {
@@ -87,10 +91,7 @@ public class GankView
 
     @Override
     public void onDetach() {
-        if (rvGankDay != null) {
-            rvGankDay.removeAllViews();
-            rvGankDay = null;
-        }
+
     }
 
     @Override

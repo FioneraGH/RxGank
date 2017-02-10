@@ -58,8 +58,7 @@ public class StatusBarUtil {
         try {
             Method method = Build.class.getMethod("hasSmartBar");
             return method != null;
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ignored) {
         }
         return false;
     }

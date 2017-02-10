@@ -27,6 +27,12 @@ public class GankContract {
     }
 
     public interface Model {
+        void fetchData(boolean isLoadMore,ResultListener resultListener);
+
+        interface ResultListener{
+            void onSuccess(List<Object> list,boolean isLoadMore);
+            void onError();
+        }
     }
 
 }

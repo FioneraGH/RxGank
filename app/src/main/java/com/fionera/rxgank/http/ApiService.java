@@ -1,6 +1,6 @@
 package com.fionera.rxgank.http;
 
-import com.fionera.rxgank.model.GankDay;
+import com.fionera.rxgank.entity.GankDay;
 
 
 import retrofit2.http.GET;

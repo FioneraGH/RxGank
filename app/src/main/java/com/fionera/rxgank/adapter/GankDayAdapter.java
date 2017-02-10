@@ -17,9 +17,9 @@ import android.widget.TextView;
 import com.fionera.base.util.ImageUtil;
 import com.fionera.base.util.ShowToast;
 import com.fionera.rxgank.R;
-import com.fionera.rxgank.model.GankItem;
-import com.fionera.rxgank.model.GankItemGirl;
-import com.fionera.rxgank.model.GankItemTitle;
+import com.fionera.rxgank.entity.GankItem;
+import com.fionera.rxgank.entity.GankItemGirl;
+import com.fionera.rxgank.entity.GankItemTitle;
 
 import java.util.List;
 

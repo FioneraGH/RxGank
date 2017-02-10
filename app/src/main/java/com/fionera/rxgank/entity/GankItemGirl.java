@@ -1,4 +1,4 @@
-package com.fionera.rxgank.model;
+package com.fionera.rxgank.entity;
 
 /**
  * GankItemGirl
