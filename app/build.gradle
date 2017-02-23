@@ -23,4 +23,5 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     debugCompile project(path: ':base', configuration: 'debug')
     releaseCompile project(path: ':base', configuration: 'release')
+    compile 'com.android.support.constraint:constraint-layout:1.0.0-beta5'
 }

@@ -32,7 +32,7 @@ public class GankModelImpl
     }
 
     @Override
-    public void fetchData(final boolean isLoadMore,ResultListener resultListener) {
+    public void fetchData(final boolean isLoadMore, ResultListener resultListener) {
         this.resultListener = resultListener;
         if(!isLoadMore){
             requestParams = new RequestParams();
@@ -43,7 +43,7 @@ public class GankModelImpl
                 new Func1<GankDay, Boolean>() {
                     @Override
                     public Boolean call(GankDay gankDay) {
-                        return gankDay!=null;
+                        return gankDay != null;
                     }
                 }).filter(new Func1<GankDay, Boolean>() {
             @Override

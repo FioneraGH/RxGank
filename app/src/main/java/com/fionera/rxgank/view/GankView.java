@@ -8,20 +8,17 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
 
 import com.fionera.base.widget.AutoRecyclerView;
 import com.fionera.rxgank.R;
 import com.fionera.rxgank.adapter.GankDayAdapter;
 import com.fionera.rxgank.contract.GankContract;
-import com.fionera.rxgank.entity.GankItemGirl;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
 import jp.wasabeef.recyclerview.adapters.SlideInBottomAnimationAdapter;
-import jp.wasabeef.recyclerview.animators.FadeInDownAnimator;
 
 /**
  * GankView
@@ -34,12 +31,9 @@ public class GankView
     private Context context;
     private GankContract.Presenter presenter;
     private List<Object> gankDayList = new ArrayList<>();
-    private int lastPos = -1;
-    private GankItemGirl curGirl;
 
     private SwipeRefreshLayout srGankDay;
     private AutoRecyclerView rvGankDay;
-    private RelativeLayout rlGirl;
 
     public GankView(Context context) {
         super(context);
@@ -125,6 +119,5 @@ public class GankView
     private void initView(View view) {
         srGankDay = (SwipeRefreshLayout) findViewById(R.id.sr_gank_day);
         rvGankDay = (AutoRecyclerView) view.findViewById(R.id.rv_gank_day);
-        rlGirl = (RelativeLayout) view.findViewById(R.id.rl_girl);
     }
 }

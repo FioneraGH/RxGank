@@ -1,7 +1,7 @@
 package com.fionera.rxgank.http;
 
 /**
- * HttpConstants
+ * TestHttpConstants
  * Created by fionera on 17-2-8 in MVPPractice.
  */
 
