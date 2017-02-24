@@ -1,7 +1,5 @@
 package com.fionera.base.fragment;
 
-import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
@@ -16,13 +14,10 @@ import android.widget.LinearLayout;
 import com.fionera.base.R;
 import com.fionera.base.util.DisplayUtil;
 import com.fionera.base.widget.TitleBar;
-import com.trello.rxlifecycle.components.support.RxFragment;
 
 public abstract class TitleBarFragment
-        extends RxFragment {
+        extends BaseFragment {
 
-    protected Context mContext;
-    protected Activity mActivity;
     protected LinearLayout rootView;
     protected TitleBar titleBar;
 
@@ -62,12 +57,5 @@ public abstract class TitleBarFragment
 
     public void setTitleBarText(String title) {
         titleBar.setTitleBarText(title);
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        mContext = context;
-        mActivity = (Activity) context;
     }
 }

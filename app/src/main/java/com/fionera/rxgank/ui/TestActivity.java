@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import rx.functions.Action1;
+import io.reactivex.functions.Consumer;
 
 public class TestActivity
         extends BaseActivity {
@@ -48,14 +48,14 @@ public class TestActivity
                 options.put("q", content);
                 testModel.test(options).compose(
                         TestActivity.this.<List<TestEntity>>bindToLifecycle()).subscribe(
-                        new Action1<List<TestEntity>>() {
+                        new Consumer<List<TestEntity>>() {
                             @Override
-                            public void call(List<TestEntity> testEntities) {
+                            public void accept(List<TestEntity> testEntities) {
                                 tvTest.setText(testEntities.get(0).getDes());
                             }
-                        }, new Action1<Throwable>() {
+                        }, new Consumer<Throwable>() {
                             @Override
-                            public void call(Throwable throwable) {
+                            public void accept(Throwable throwable) {
                                 tvTest.setText(throwable.getMessage());
                             }
                         });

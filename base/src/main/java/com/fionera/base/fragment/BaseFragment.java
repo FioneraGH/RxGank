@@ -3,7 +3,7 @@ package com.fionera.base.fragment;
 import android.app.Activity;
 import android.content.Context;
 
-import com.trello.rxlifecycle.components.support.RxFragment;
+import com.trello.rxlifecycle2.components.support.RxFragment;
 
 /**
  * BaseFragment

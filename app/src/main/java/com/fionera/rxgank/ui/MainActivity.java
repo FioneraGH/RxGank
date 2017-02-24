@@ -7,14 +7,13 @@ import com.fionera.base.activity.BaseActivity;
 import com.fionera.base.util.ShowToast;
 import com.fionera.rxgank.R;
 import com.fionera.rxgank.fragment.GankFragment;
-import com.jakewharton.rxbinding.view.RxView;
 
 import java.util.concurrent.TimeUnit;
 
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func1;
-import rx.schedulers.TimeInterval;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Predicate;
+import io.reactivex.schedulers.Timed;
 
 /**
  * MainActivity
@@ -34,35 +33,33 @@ public class MainActivity
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 GankFragment.getInstance()).commitAllowingStateLoss();
 
-        lifecycle.asObservable().throttleFirst(TIME_TO_EXIT, TimeUnit.MILLISECONDS,
-                AndroidSchedulers.mainThread()).subscribe(new Action1<Void>() {
+        lifecycle.throttleFirst(TIME_TO_EXIT, TimeUnit.MILLISECONDS,
+                AndroidSchedulers.mainThread()).subscribe(new Consumer<Void>() {
             @Override
-            public void call(Void aVoid) {
+            public void accept(Void aVoid) {
                 ShowToast.show("再按一次退出");
             }
-        }, new Action1<Throwable>() {
+        }, new Consumer<Throwable>() {
             @Override
-            public void call(Throwable throwable) {
+            public void accept(Throwable throwable) {
                 throwable.printStackTrace();
             }
         });
 
-        lifecycle.asObservable().compose(bindToLifecycle()).timeInterval(
-                AndroidSchedulers.mainThread()).skip(1).filter(
-
-                new Func1<TimeInterval<Object>, Boolean>() {
-                    @Override
-                    public Boolean call(TimeInterval<Object> objectTimeInterval) {
-                        return objectTimeInterval.getIntervalInMilliseconds() < TIME_TO_EXIT;
-                    }
-                }).subscribe(new Action1<TimeInterval<Object>>() {
+        lifecycle.compose(this.<Void>bindToLifecycle()).timeInterval(
+                AndroidSchedulers.mainThread()).skip(1).filter(new Predicate<Timed<Void>>() {
             @Override
-            public void call(TimeInterval<Object> objectTimeInterval) {
+            public boolean test(Timed<Void> voidTimed) throws Exception {
+                return voidTimed.time() < TIME_TO_EXIT;
+            }
+        }).subscribe(new Consumer<Timed<Void>>() {
+            @Override
+            public void accept(Timed<Void> voidTimed) throws Exception {
                 finish();
             }
-        }, new Action1<Throwable>() {
+        }, new Consumer<Throwable>() {
             @Override
-            public void call(Throwable throwable) {
+            public void accept(Throwable throwable) {
                 throwable.printStackTrace();
             }
         });

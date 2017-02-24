@@ -5,11 +5,11 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import com.fionera.base.util.StatusBarUtil;
-import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
+import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
-import rx.subjects.PublishSubject;
-import rx.subjects.SerializedSubject;
-import rx.subjects.Subject;
+import io.reactivex.subjects.PublishSubject;
+import io.reactivex.subjects.Subject;
+
 
 /**
  * BaseActivity
@@ -19,7 +19,7 @@ import rx.subjects.Subject;
 public class BaseActivity
         extends RxAppCompatActivity {
 
-    public Subject<Void, Void> lifecycle = new SerializedSubject<>(PublishSubject.<Void>create());
+    public Subject<Void> lifecycle = PublishSubject.create();
 
     protected Context mContext;
     protected boolean isDestroy;
@@ -41,7 +41,7 @@ public class BaseActivity
         super.onDestroy();
         isDestroy = true;
         if(lifecycle != null){
-            lifecycle.onCompleted();
+            lifecycle.onComplete();
             lifecycle = null;
         }
     }

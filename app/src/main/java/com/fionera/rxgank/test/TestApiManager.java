@@ -3,10 +3,10 @@ package com.fionera.rxgank.test;
 import java.util.List;
 import java.util.Map;
 
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * TestApiManager
@@ -26,9 +26,9 @@ public class TestApiManager {
     }
 
     private static class CommonFilter<T>
-            implements Func1<BaseEntity<T>, T> {
+            implements Function<BaseEntity<T>, T> {
         @Override
-        public T call(BaseEntity<T> t) {
+        public T apply(BaseEntity<T> t) throws Exception {
             if (t.getError_code() != 0) {
                 throw new HttpTimeException(t.getReason());
             }
@@ -38,7 +38,6 @@ public class TestApiManager {
 
     private static class HttpTimeException
             extends RuntimeException {
-
         HttpTimeException(String message) {
             super(message);
         }

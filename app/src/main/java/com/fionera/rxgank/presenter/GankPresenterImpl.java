@@ -6,10 +6,8 @@ import com.fionera.rxgank.view.GankView;
 
 import java.util.List;
 
-import rx.subjects.PublishSubject;
-import rx.subjects.SerializedSubject;
-import rx.subjects.Subject;
-
+import io.reactivex.subjects.PublishSubject;
+import io.reactivex.subjects.Subject;
 
 /**
  * Created by fionera on 2017/02/08
@@ -21,8 +19,7 @@ public class GankPresenterImpl
     private GankView gankView;
     private GankContract.Model model;
 
-    private Subject<Void, Void> lifecycle = new SerializedSubject<>(
-            PublishSubject.<Void>create());
+    private Subject<Void> lifecycle = PublishSubject.create();
 
     public GankPresenterImpl(GankView view) {
         gankView = view;
@@ -40,7 +37,7 @@ public class GankPresenterImpl
     @Override
     public void unInit() {
         lifecycle.onNext(null);
-        lifecycle.onCompleted();
+        lifecycle.onComplete();
         if (gankView != null) {
             gankView.onDetach();
         }

@@ -1,13 +1,11 @@
 package com.fionera.rxgank.test;
 
 
-import com.fionera.rxgank.test.TestApiManager;
-import com.fionera.rxgank.test.TestEntity;
-
 import java.util.List;
 import java.util.Map;
 
-import rx.Observable;
+import io.reactivex.Observable;
+
 
 /**
  * TestModel

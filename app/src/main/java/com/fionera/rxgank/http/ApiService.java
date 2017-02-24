@@ -2,11 +2,10 @@ package com.fionera.rxgank.http;
 
 import com.fionera.rxgank.entity.GankDay;
 
-
+import io.reactivex.Observable;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.Path;
-import rx.Observable;
 
 /**
  * ApiService

@@ -10,11 +10,12 @@ import com.fionera.rxgank.http.Api;
 import java.util.ArrayList;
 import java.util.List;
 
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
-import rx.subjects.Subject;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.functions.Predicate;
+import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subjects.Subject;
 
 /**
  * Created by fionera on 2017/02/08
@@ -24,10 +25,10 @@ public class GankModelImpl
         implements GankContract.Model {
 
     private RequestParams requestParams;
-    private Subject<Void, Void> lifecycle;
+    private Subject<Void> lifecycle;
     private ResultListener resultListener;
 
-    public GankModelImpl(Subject<Void, Void> lifecycle) {
+    public GankModelImpl(Subject<Void> lifecycle) {
         this.lifecycle = lifecycle;
     }
 
@@ -39,25 +40,25 @@ public class GankModelImpl
         }
 
         Api.getInstance().getApiService().getGankDay(requestParams.year, requestParams.month,
-                requestParams.day).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).filter(
-                new Func1<GankDay, Boolean>() {
-                    @Override
-                    public Boolean call(GankDay gankDay) {
-                        return gankDay != null;
-                    }
-                }).filter(new Func1<GankDay, Boolean>() {
+                requestParams.day).subscribeOn(Schedulers.io()).observeOn(
+                AndroidSchedulers.mainThread()).filter(new Predicate<GankDay>() {
             @Override
-            public Boolean call(GankDay gankDay) {
+            public boolean test(GankDay gankDay) throws Exception {
+                return gankDay != null;
+            }
+        }).filter(new Predicate<GankDay>() {
+            @Override
+            public boolean test(GankDay gankDay) throws Exception {
                 return gankDay.results != null;
             }
-        }).map(new Func1<GankDay, List<Object>>() {
+        }).map(new Function<GankDay, List<Object>>() {
             @Override
-            public List<Object> call(GankDay gankDay) {
+            public List<Object> apply(GankDay gankDay) throws Exception {
                 return flatGankDay2List(gankDay);
             }
-        }).takeUntil(lifecycle).subscribe(new Action1<List<Object>>() {
+        }).takeUntil(lifecycle).subscribe(new Consumer<List<Object>>() {
             @Override
-            public void call(List<Object> objects) {
+            public void accept(List<Object> objects) throws Exception {
                 if (Utils.notEmpty(objects)) {
                     requestParams.onSuccess();
                 } else {
@@ -65,9 +66,9 @@ public class GankModelImpl
                 }
                 processRequestResult(objects, isLoadMore);
             }
-        }, new Action1<Throwable>() {
+        }, new Consumer<Throwable>() {
             @Override
-            public void call(Throwable throwable) {
+            public void accept(Throwable throwable) {
                 throwable.printStackTrace();
                 requestParams.onError();
                 processRequestResult(null, isLoadMore);
