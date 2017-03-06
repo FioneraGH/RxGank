@@ -19,7 +19,7 @@ import io.reactivex.subjects.Subject;
 public class BaseActivity
         extends RxAppCompatActivity {
 
-    public Subject<Void> lifecycle = PublishSubject.create();
+    public Subject<Integer> lifecycle = PublishSubject.create();
 
     protected Context mContext;
     protected boolean isDestroy;

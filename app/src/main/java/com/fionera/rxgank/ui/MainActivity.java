@@ -34,9 +34,9 @@ public class MainActivity
                 GankFragment.getInstance()).commitAllowingStateLoss();
 
         lifecycle.throttleFirst(TIME_TO_EXIT, TimeUnit.MILLISECONDS,
-                AndroidSchedulers.mainThread()).subscribe(new Consumer<Void>() {
+                AndroidSchedulers.mainThread()).subscribe(new Consumer<Integer>() {
             @Override
-            public void accept(Void aVoid) {
+            public void accept(Integer aInteger) {
                 ShowToast.show("再按一次退出");
             }
         }, new Consumer<Throwable>() {
@@ -46,15 +46,15 @@ public class MainActivity
             }
         });
 
-        lifecycle.compose(this.<Void>bindToLifecycle()).timeInterval(
-                AndroidSchedulers.mainThread()).skip(1).filter(new Predicate<Timed<Void>>() {
+        lifecycle.compose(this.<Integer>bindToLifecycle()).timeInterval(
+                AndroidSchedulers.mainThread()).skip(1).filter(new Predicate<Timed<Integer>>() {
             @Override
-            public boolean test(Timed<Void> voidTimed) throws Exception {
-                return voidTimed.time() < TIME_TO_EXIT;
+            public boolean test(Timed<Integer> timed) throws Exception {
+                return timed.time() < TIME_TO_EXIT;
             }
-        }).subscribe(new Consumer<Timed<Void>>() {
+        }).subscribe(new Consumer<Timed<Integer>>() {
             @Override
-            public void accept(Timed<Void> voidTimed) throws Exception {
+            public void accept(Timed<Integer> timed) throws Exception {
                 finish();
             }
         }, new Consumer<Throwable>() {
@@ -68,7 +68,7 @@ public class MainActivity
     @Override
     public void onBackPressed() {
         if (lifecycle != null) {
-            lifecycle.onNext(null);
+            lifecycle.onNext(0);
         }
     }
 }
