@@ -15,7 +15,7 @@ import okhttp3.ResponseBody;
  * Created by fionera on 17-2-8 in MVPPractice.
  */
 
-public class LogInterceptor
+class LogInterceptor
         implements Interceptor {
     @Override
     public Response intercept(Chain chain) throws IOException {

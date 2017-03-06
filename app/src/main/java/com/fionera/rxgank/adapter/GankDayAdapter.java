@@ -1,7 +1,6 @@
 package com.fionera.rxgank.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableStringBuilder;
@@ -21,7 +20,6 @@ import com.fionera.rxgank.R;
 import com.fionera.rxgank.entity.GankItem;
 import com.fionera.rxgank.entity.GankItemGirl;
 import com.fionera.rxgank.entity.GankItemTitle;
-import com.fionera.rxgank.ui.TestActivity;
 
 import java.util.List;
 
@@ -74,7 +72,7 @@ public class GankDayAdapter
             case TYPE_TITLE:
                 GankDayTitleHolder gankTitleHolder = (GankDayTitleHolder) viewHolder;
                 GankItemTitle gankItemTitle = (GankItemTitle) list.get(position);
-                gankTitleHolder.tv_title.setText(gankItemTitle.type + "");
+                gankTitleHolder.tv_title.setText(gankItemTitle.type);
                 gankTitleHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -98,12 +96,6 @@ public class GankDayAdapter
                     builder.setSpan(new RelativeSizeSpan(0.85f), start, end,
                             Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
                     gankDayHolder.tv_desc.setText(builder);
-                    gankDayHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            context.startActivity(new Intent(context, TestActivity.class));
-                        }
-                    });
                 }
                 break;
         }

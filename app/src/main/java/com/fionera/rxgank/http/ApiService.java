@@ -1,6 +1,7 @@
 package com.fionera.rxgank.http;
 
-import com.fionera.rxgank.entity.GankDay;
+import com.fionera.rxgank.entity.BaseEntity;
+import com.fionera.rxgank.entity.GankDayResults;
 
 import io.reactivex.Observable;
 import retrofit2.http.GET;
@@ -16,6 +17,7 @@ public interface ApiService {
 
     @Headers("Cache-Control: public, max-age=3600")
     @GET("day/{year}/{month}/{day}")
-    Observable<GankDay> getGankDay(@Path("year") int year, @Path("month") int month,
-                                   @Path("day") int day);
+    Observable<BaseEntity<GankDayResults>> getGankDay(@Path("year") int year,
+                                                      @Path("month") int month,
+                                                      @Path("day") int day);
 }

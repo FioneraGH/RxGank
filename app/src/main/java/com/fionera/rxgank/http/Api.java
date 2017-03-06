@@ -16,7 +16,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Created by fionera on 17-2-8 in MVPPractice.
  */
 
-public class Api {
+class Api {
 
     private static ApiService apiService;
 
@@ -26,7 +26,7 @@ public class Api {
         private static Api instance = new Api();
     }
 
-    public static Api getInstance() {
+    static Api getInstance() {
         return Holder.instance;
     }
 
@@ -48,7 +48,7 @@ public class Api {
         apiService = retrofit.create(ApiService.class);
     }
 
-    public ApiService getApiService() {
+    ApiService getApiService() {
         if (apiService == null) {
             init();
         }

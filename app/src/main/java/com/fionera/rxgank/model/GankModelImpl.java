@@ -2,10 +2,9 @@ package com.fionera.rxgank.model;
 
 import com.fionera.base.util.Utils;
 import com.fionera.rxgank.contract.GankContract;
-import com.fionera.rxgank.entity.GankDay;
 import com.fionera.rxgank.entity.GankDayResults;
 import com.fionera.rxgank.entity.GankItemTitle;
-import com.fionera.rxgank.http.Api;
+import com.fionera.rxgank.http.ApiManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,22 +38,17 @@ public class GankModelImpl
             requestParams = new RequestParams();
         }
 
-        Api.getInstance().getApiService().getGankDay(requestParams.year, requestParams.month,
+        ApiManager.getGankDay(requestParams.year, requestParams.month,
                 requestParams.day).subscribeOn(Schedulers.io()).observeOn(
-                AndroidSchedulers.mainThread()).filter(new Predicate<GankDay>() {
+                AndroidSchedulers.mainThread()).filter(new Predicate<GankDayResults>() {
             @Override
-            public boolean test(GankDay gankDay) throws Exception {
-                return gankDay != null;
+            public boolean test(GankDayResults gankDayResults) throws Exception {
+                return gankDayResults != null;
             }
-        }).filter(new Predicate<GankDay>() {
+        }).map(new Function<GankDayResults, List<Object>>() {
             @Override
-            public boolean test(GankDay gankDay) throws Exception {
-                return gankDay.results != null;
-            }
-        }).map(new Function<GankDay, List<Object>>() {
-            @Override
-            public List<Object> apply(GankDay gankDay) throws Exception {
-                return flatGankDay2List(gankDay);
+            public List<Object> apply(GankDayResults gankDayResults) throws Exception {
+                return flatGankDay2List(gankDayResults);
             }
         }).takeUntil(lifecycle).subscribe(new Consumer<List<Object>>() {
             @Override
@@ -76,9 +70,8 @@ public class GankModelImpl
         });
     }
 
-    private List<Object> flatGankDay2List(GankDay gankDay) {
+    private List<Object> flatGankDay2List(GankDayResults results) {
         List<Object> list = new ArrayList<>();
-        GankDayResults results = gankDay.results;
         if (Utils.notEmpty(results.福利)) list.addAll(results.福利);
         if (Utils.notEmpty(results.Android)) {
             list.add(new GankItemTitle(results.Android.get(0)));
