@@ -19,7 +19,7 @@ public class GankPresenterImpl
     private GankView gankView;
     private GankContract.Model model;
 
-    private Subject<Void> lifecycle = PublishSubject.create();
+    private Subject<Integer> lifecycle = PublishSubject.create();
 
     public GankPresenterImpl(GankView view) {
         gankView = view;
@@ -36,7 +36,7 @@ public class GankPresenterImpl
 
     @Override
     public void unInit() {
-        lifecycle.onNext(null);
+        lifecycle.onNext(0);
         lifecycle.onComplete();
         if (gankView != null) {
             gankView.onDetach();

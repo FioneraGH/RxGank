@@ -1,5 +1,6 @@
 package com.fionera.rxgank.http;
 
+import com.fionera.rxgank.AppComponentHolder;
 import com.fionera.rxgank.entity.BaseEntity;
 import com.fionera.rxgank.entity.GankDayResults;
 
@@ -17,9 +18,9 @@ import io.reactivex.schedulers.Schedulers;
 
 public class ApiManager {
     public static Observable<GankDayResults> getGankDay(int year, int mouth, int day) {
-        return Api.getInstance().getApiService().getGankDay(year, mouth, day).map(
-                new CommonFilter<GankDayResults>()).compose(
-                ApiManager.<GankDayResults>httpTransformer());
+        return AppComponentHolder.getAppComponent().getApiService().getGankDay(year, mouth, day)
+                .map(new CommonFilter<GankDayResults>()).compose(
+                        ApiManager.<GankDayResults>httpTransformer());
     }
 
     private static class CommonFilter<T>

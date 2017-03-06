@@ -24,10 +24,10 @@ public class GankModelImpl
         implements GankContract.Model {
 
     private RequestParams requestParams;
-    private Subject<Void> lifecycle;
+    private Subject<Integer> lifecycle;
     private ResultListener resultListener;
 
-    public GankModelImpl(Subject<Void> lifecycle) {
+    public GankModelImpl(Subject<Integer> lifecycle) {
         this.lifecycle = lifecycle;
     }
 

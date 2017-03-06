@@ -5,6 +5,6 @@ package com.fionera.rxgank.http;
  * Created by fionera on 17-2-8 in MVPPractice.
  */
 
-interface HttpConstants {
+public interface HttpConstants {
     String BASE_URL = "http://gank.io/api/";
 }

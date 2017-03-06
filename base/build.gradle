@@ -52,7 +52,7 @@ dependencies {
 //    compile 'com.jakewharton.rxbinding:rxbinding:1.0.0'
 
     // RxPermissions
-    compile 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.2@aar'
+    compile 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.3@aar'
 
     // RecyclerView Animators
     compile 'jp.wasabeef:recyclerview-animators:2.2.5'
