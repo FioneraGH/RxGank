@@ -1,6 +1,7 @@
 package com.fionera.rxgank.view;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,6 +14,10 @@ import com.fionera.base.widget.AutoRecyclerView;
 import com.fionera.rxgank.R;
 import com.fionera.rxgank.adapter.GankDayAdapter;
 import com.fionera.rxgank.contract.GankContract;
+import com.trello.rxlifecycle2.LifecycleTransformer;
+import com.trello.rxlifecycle2.android.ActivityEvent;
+import com.trello.rxlifecycle2.android.FragmentEvent;
+import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -119,5 +124,20 @@ public class GankView
     private void initView(View view) {
         srGankDay = (SwipeRefreshLayout) findViewById(R.id.sr_gank_day);
         rvGankDay = (AutoRecyclerView) view.findViewById(R.id.rv_gank_day);
+    }
+
+    @Override
+    public <T> LifecycleTransformer<T> bindLifecycle() {
+        return ((RxAppCompatActivity) context).bindToLifecycle();
+    }
+
+    @Override
+    public <T> LifecycleTransformer<T> bindUntil(@NonNull ActivityEvent event) {
+        return null;
+    }
+
+    @Override
+    public <T> LifecycleTransformer<T> bindUntil(@NonNull FragmentEvent event) {
+        return null;
     }
 }

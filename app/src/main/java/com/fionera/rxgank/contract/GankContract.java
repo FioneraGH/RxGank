@@ -2,8 +2,11 @@ package com.fionera.rxgank.contract;
 
 import com.fionera.base.mvp.BasePresenter;
 import com.fionera.base.mvp.BaseView;
+import com.fionera.rxgank.model.RequestParams;
 
 import java.util.List;
+
+import io.reactivex.Observable;
 
 /**
  * GankContract
@@ -27,12 +30,6 @@ public class GankContract {
     }
 
     public interface Model {
-        void fetchData(boolean isLoadMore,ResultListener resultListener);
-
-        interface ResultListener{
-            void onSuccess(List<Object> list,boolean isLoadMore);
-            void onError();
-        }
+        Observable<List<Object>> fetchData(boolean isLoadMore, RequestParams requestParams);
     }
-
 }

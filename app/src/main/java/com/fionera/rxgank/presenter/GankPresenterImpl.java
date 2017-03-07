@@ -1,11 +1,21 @@
 package com.fionera.rxgank.presenter;
 
+import com.fionera.base.util.Utils;
 import com.fionera.rxgank.contract.GankContract;
+import com.fionera.rxgank.entity.GankDayResults;
+import com.fionera.rxgank.entity.GankItemTitle;
+import com.fionera.rxgank.http.ApiService;
 import com.fionera.rxgank.model.GankModelImpl;
-import com.fionera.rxgank.view.GankView;
+import com.fionera.rxgank.model.RequestParams;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.functions.Predicate;
 import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.Subject;
 
@@ -14,54 +24,85 @@ import io.reactivex.subjects.Subject;
  */
 
 public class GankPresenterImpl
-        implements GankContract.Presenter,GankContract.Model.ResultListener {
+        implements GankContract.Presenter {
 
-    private GankView gankView;
+    private GankContract.View view;
     private GankContract.Model model;
 
-    private Subject<Integer> lifecycle = PublishSubject.create();
+    private RequestParams requestParams;
 
-    public GankPresenterImpl(GankView view) {
-        gankView = view;
+    @Inject
+    public GankPresenterImpl(GankContract.View view, ApiService apiService) {
+        this.view = view;
+        this.model = new GankModelImpl(apiService);
     }
 
     @Override
     public void init() {
-        if (gankView != null) {
-            gankView.setPresenter(this);
-            gankView.onAttach();
+        if (view != null) {
+            view.setPresenter(this);
+            view.onAttach();
         }
-        model = new GankModelImpl(lifecycle);
     }
 
     @Override
     public void unInit() {
-        lifecycle.onNext(0);
-        lifecycle.onComplete();
-        if (gankView != null) {
-            gankView.onDetach();
+        if (view != null) {
+            view.onDetach();
         }
     }
 
     @Override
     public void onRefresh() {
-        gankView.onLoading();
-        model.fetchData(false,this);
+        view.onLoading();
+        commonSubscriber(false);
     }
 
     @Override
     public void onLoadMore() {
-        model.fetchData(true,this);
+        commonSubscriber(true);
     }
 
+    private void commonSubscriber(final boolean isLoadMore) {
+        if (!isLoadMore) {
+            requestParams = new RequestParams();
+        }
 
-    @Override
-    public void onSuccess(List<Object> list, boolean isLoadMore) {
-        gankView.onSuccess(list, isLoadMore);
+        model.fetchData(isLoadMore, requestParams).compose(view.<List<Object>>bindLifecycle())
+                .subscribe(new Consumer<List<Object>>() {
+                    @Override
+                    public void accept(List<Object> objects) throws Exception {
+                        if (Utils.notEmpty(objects)) {
+                            requestParams.onSuccess();
+                        } else {
+                            requestParams.onEmpty();
+                        }
+                        processRequestResult(objects, isLoadMore);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) {
+                        throwable.printStackTrace();
+                        requestParams.onError();
+                        processRequestResult(null, isLoadMore);
+                    }
+                });
     }
 
-    @Override
-    public void onError() {
-        gankView.onError();
+    private void processRequestResult(List<Object> list, boolean isLoadMore) {
+        if (!requestParams.isComplete()) {
+            view.onSuccess(list, isLoadMore);
+            /*
+            here to fetch 3 days
+             */
+            commonSubscriber(true);
+        } else {
+            requestParams.onComplete();
+            if (Utils.notEmpty(list)) {
+                view.onSuccess(list, isLoadMore);
+            } else {
+                view.onError();
+            }
+        }
     }
 }

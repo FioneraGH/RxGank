@@ -5,16 +5,17 @@ import com.fionera.rxgank.contract.GankContract;
 import com.fionera.rxgank.entity.GankDayResults;
 import com.fionera.rxgank.entity.GankItemTitle;
 import com.fionera.rxgank.http.ApiManager;
+import com.fionera.rxgank.http.ApiService;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subjects.Subject;
 
 /**
  * Created by fionera on 2017/02/08
@@ -23,24 +24,23 @@ import io.reactivex.subjects.Subject;
 public class GankModelImpl
         implements GankContract.Model {
 
-    private RequestParams requestParams;
-    private Subject<Integer> lifecycle;
-    private ResultListener resultListener;
+    private ApiService apiService;
 
-    public GankModelImpl(Subject<Integer> lifecycle) {
-        this.lifecycle = lifecycle;
+    public GankModelImpl(ApiService apiService) {
+        this.apiService = apiService;
     }
 
     @Override
-    public void fetchData(final boolean isLoadMore, ResultListener resultListener) {
-        this.resultListener = resultListener;
-        if(!isLoadMore){
-            requestParams = new RequestParams();
-        }
-
-        ApiManager.getGankDay(requestParams.year, requestParams.month,
+    public Observable<List<Object>> fetchData(final boolean isLoadMore,
+                                              RequestParams requestParams) {
+        return ApiManager.getGankDay(apiService, requestParams.year, requestParams.month,
                 requestParams.day).subscribeOn(Schedulers.io()).observeOn(
                 AndroidSchedulers.mainThread()).filter(new Predicate<GankDayResults>() {
+            @Override
+            public boolean test(GankDayResults gankDayResults) throws Exception {
+                return gankDayResults != null;
+            }
+        }).filter(new Predicate<GankDayResults>() {
             @Override
             public boolean test(GankDayResults gankDayResults) throws Exception {
                 return gankDayResults != null;
@@ -49,23 +49,6 @@ public class GankModelImpl
             @Override
             public List<Object> apply(GankDayResults gankDayResults) throws Exception {
                 return flatGankDay2List(gankDayResults);
-            }
-        }).takeUntil(lifecycle).subscribe(new Consumer<List<Object>>() {
-            @Override
-            public void accept(List<Object> objects) throws Exception {
-                if (Utils.notEmpty(objects)) {
-                    requestParams.onSuccess();
-                } else {
-                    requestParams.onEmpty();
-                }
-                processRequestResult(objects, isLoadMore);
-            }
-        }, new Consumer<Throwable>() {
-            @Override
-            public void accept(Throwable throwable) {
-                throwable.printStackTrace();
-                requestParams.onError();
-                processRequestResult(null, isLoadMore);
             }
         });
     }
@@ -94,22 +77,5 @@ public class GankModelImpl
             list.addAll(results.休息视频);
         }
         return list;
-    }
-
-    private void processRequestResult(List<Object> list, boolean isLoadMore) {
-        if (!requestParams.isComplete()) {
-            resultListener.onSuccess(list, isLoadMore);
-            /*
-            here to fetch 3 days
-             */
-            fetchData(true, resultListener);
-        } else {
-            requestParams.onComplete();
-            if (Utils.notEmpty(list)) {
-                resultListener.onSuccess(list, isLoadMore);
-            } else {
-                resultListener.onError();
-            }
-        }
     }
 }

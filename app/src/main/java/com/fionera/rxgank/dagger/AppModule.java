@@ -1,12 +1,13 @@
-package com.fionera.rxgank;
+package com.fionera.rxgank.dagger;
 
 import android.app.Application;
-import android.content.Context;
 
 import com.fionera.base.BaseApplication;
 import com.fionera.rxgank.http.ApiService;
 import com.fionera.rxgank.http.HttpConstants;
 import com.fionera.rxgank.http.LogInterceptor;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.File;
 import java.util.concurrent.TimeUnit;
@@ -36,13 +37,13 @@ public class AppModule {
 
     @Provides
     @Singleton
-    public Application provideApplication(){
+    Application provideApplication(){
         return application;
     }
 
     @Provides
     @Singleton
-    public OkHttpClient provideOkHttpClient(){
+    OkHttpClient provideOkHttpClient(){
         File cacheFile = new File(BaseApplication.getInstance().getCacheDir(), "HttpCache");
         Cache cache = new Cache(cacheFile, 1024 * 1024 * 10);
 
@@ -54,17 +55,24 @@ public class AppModule {
 
     @Provides
     @Singleton
-    public Retrofit provideRetrofit(OkHttpClient okHttpClient){
-        Retrofit retrofit = new Retrofit.Builder().client(okHttpClient).baseUrl(
-                HttpConstants.BASE_URL).addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create()).build();
-
-        return retrofit;
+    Gson provideGson(){
+        GsonBuilder builder = new GsonBuilder();
+        return builder.create();
     }
 
     @Provides
     @Singleton
-    public ApiService provideApiService(Retrofit retrofit){
+    Retrofit provideRetrofit(OkHttpClient okHttpClient, Gson gson) {
+        Retrofit.Builder builder = new Retrofit.Builder().client(okHttpClient).baseUrl(
+                HttpConstants.BASE_URL).addConverterFactory(GsonConverterFactory.create(gson))
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create());
+
+        return builder.build();
+    }
+
+    @Provides
+    @Singleton
+    ApiService provideApiService(Retrofit retrofit){
         return retrofit.create(ApiService.class);
     }
 }

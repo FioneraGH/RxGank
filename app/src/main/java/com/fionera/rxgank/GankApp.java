@@ -1,8 +1,10 @@
 package com.fionera.rxgank;
 
 import com.fionera.base.BaseApplication;
-
-import java.util.List;
+import com.fionera.rxgank.dagger.AppComponent;
+import com.fionera.rxgank.dagger.AppComponentHolder;
+import com.fionera.rxgank.dagger.AppModule;
+import com.fionera.rxgank.dagger.DaggerAppComponent;
 
 /**
  * GankApp

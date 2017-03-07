@@ -1,4 +1,4 @@
-package com.fionera.rxgank;
+package com.fionera.rxgank.dagger;
 
 import android.app.Application;
 
