@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import com.fionera.base.fragment.BaseFragment;
 import com.fionera.rxgank.dagger.AppComponentHolder;
 import com.fionera.rxgank.dagger.component.DaggerGankComponent;
+import com.fionera.rxgank.dagger.component.GankComponent;
 import com.fionera.rxgank.dagger.module.GankModule;
 import com.fionera.rxgank.presenter.GankPresenterImpl;
 import com.fionera.rxgank.view.GankView;
@@ -34,13 +35,16 @@ public class GankFragment
     @Inject
     public Lazy<GankPresenterImpl> presenter;
 
+    private GankComponent gankComponent;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         GankView view = new GankView(mContext);
-        DaggerGankComponent.builder().appComponent(AppComponentHolder.getAppComponent()).gankModule(
-                new GankModule(view)).build().inject(this);
+        gankComponent = DaggerGankComponent.builder().appComponent(
+                AppComponentHolder.getAppComponent()).gankModule(new GankModule(view)).build();
+        gankComponent.inject(this);
         presenter.get().init();
         return view;
     }
@@ -56,6 +60,9 @@ public class GankFragment
         super.onDestroy();
         if (presenter != null) {
             presenter.get().unInit();
+        }
+        if (gankComponent != null) {
+            gankComponent = null;
         }
     }
 }

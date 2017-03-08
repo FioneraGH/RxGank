@@ -2,22 +2,15 @@ package com.fionera.rxgank.presenter;
 
 import com.fionera.base.util.Utils;
 import com.fionera.rxgank.contract.GankContract;
-import com.fionera.rxgank.entity.GankDayResults;
-import com.fionera.rxgank.entity.GankItemTitle;
 import com.fionera.rxgank.http.ApiService;
 import com.fionera.rxgank.model.GankModelImpl;
 import com.fionera.rxgank.model.RequestParams;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
-import io.reactivex.functions.Predicate;
-import io.reactivex.subjects.PublishSubject;
-import io.reactivex.subjects.Subject;
 
 /**
  * Created by fionera on 2017/02/08
@@ -32,7 +25,7 @@ public class GankPresenterImpl
     private RequestParams requestParams;
 
     @Inject
-    public GankPresenterImpl(GankContract.View view, ApiService apiService) {
+    GankPresenterImpl(GankContract.View view, ApiService apiService) {
         this.view = view;
         this.model = new GankModelImpl(apiService);
     }

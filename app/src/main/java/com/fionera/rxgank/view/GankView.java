@@ -104,6 +104,9 @@ public class GankView
         if (!isLoadMore) {
             gankDayList.clear();
         }
+        if (list == null) {
+            return;
+        }
         gankDayList.addAll(list);
         rvGankDay.getAdapter().notifyDataSetChanged();
         rvGankDay.loadMoreComplete(false);

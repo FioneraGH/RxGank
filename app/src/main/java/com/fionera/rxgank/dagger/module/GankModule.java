@@ -1,6 +1,7 @@
 package com.fionera.rxgank.dagger.module;
 
 import com.fionera.rxgank.contract.GankContract;
+import com.fionera.rxgank.dagger.scope.FragmentScope;
 import com.fionera.rxgank.presenter.GankPresenterImpl;
 
 import dagger.Module;
@@ -20,6 +21,7 @@ public class GankModule {
     }
 
     @Provides
+    @FragmentScope
     GankContract.View provideView(){
         return view;
     }
