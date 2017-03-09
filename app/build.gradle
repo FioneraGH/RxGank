@@ -17,15 +17,23 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    sourceSets {
+        main {
+            res.srcDirs = [
+                    'src/main/res',
+                    'src/main/res/layouts/test',
+            ]
+        }
+    }
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     debugCompile project(path: ':base', configuration: 'debug')
     releaseCompile project(path: ':base', configuration: 'release')
-    compile 'com.android.support.constraint:constraint-layout:1.0.1'
 
     // Dagger2
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.google.dagger:dagger-android:2.9'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.9'
 }

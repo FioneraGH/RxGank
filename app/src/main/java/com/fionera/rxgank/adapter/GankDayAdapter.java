@@ -1,7 +1,12 @@
 package com.fionera.rxgank.adapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -20,6 +25,7 @@ import com.fionera.rxgank.R;
 import com.fionera.rxgank.entity.GankItem;
 import com.fionera.rxgank.entity.GankItemGirl;
 import com.fionera.rxgank.entity.GankItemTitle;
+import com.fionera.rxgank.ui.ImageDetailActivity;
 
 import java.util.List;
 
@@ -58,14 +64,18 @@ public class GankDayAdapter
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         switch (getItemViewType(position)) {
             case TYPE_GIRL:
-                GankDayGirlHolder gankDayGirlHolder = (GankDayGirlHolder) viewHolder;
-                GankItemGirl gankItemGirl = (GankItemGirl) list.get(position);
+                final GankDayGirlHolder gankDayGirlHolder = (GankDayGirlHolder) viewHolder;
+                final GankItemGirl gankItemGirl = (GankItemGirl) list.get(position);
                 ImageUtil.loadImage(gankItemGirl.url, gankDayGirlHolder.iv_girl);
                 gankDayGirlHolder.tv_time.setText(gankItemGirl.publishedAt);
                 gankDayGirlHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ShowToast.show("GankGirl");
+                        context.startActivity(new Intent(context, ImageDetailActivity.class)
+                                .putExtra("imageUrl", gankItemGirl.url), ActivityOptionsCompat
+                                .makeSceneTransitionAnimation((Activity) context,
+                                        gankDayGirlHolder.iv_girl,
+                                        context.getString(R.string.share_image)).toBundle());
                     }
                 });
                 break;
@@ -96,6 +106,12 @@ public class GankDayAdapter
                     builder.setSpan(new RelativeSizeSpan(0.85f), start, end,
                             Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
                     gankDayHolder.tv_desc.setText(builder);
+                    gankDayHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ShowToast.show("GankItem");
+                        }
+                    });
                 }
                 break;
         }
