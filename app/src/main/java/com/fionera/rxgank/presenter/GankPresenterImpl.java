@@ -34,14 +34,14 @@ public class GankPresenterImpl
     public void init() {
         if (view != null) {
             view.setPresenter(this);
-            view.onAttach();
+            view.onAttachToPresenter();
         }
     }
 
     @Override
     public void unInit() {
         if (view != null) {
-            view.onDetach();
+            view.onDetachToPresenter();
         }
     }
 

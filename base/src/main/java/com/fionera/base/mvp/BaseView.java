@@ -9,7 +9,7 @@ public interface BaseView<P extends BasePresenter>
         extends BindHelper {
     void setPresenter(P presenter);
 
-    void onAttach();
+    void onAttachToPresenter();
 
-    void onDetach();
+    void onDetachToPresenter();
 }
