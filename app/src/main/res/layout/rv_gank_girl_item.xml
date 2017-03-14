@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="150dp">
 
@@ -8,8 +9,9 @@
         android:id="@+id/iv_girl"
         android:layout_width="match_parent"
         android:layout_height="150dp"
+        android:scaleType="centerCrop"
         android:transitionName="@string/share_image"
-        android:scaleType="centerCrop"/>
+        app:actualImageScaleType="centerCrop" />
 
     <com.fionera.rxgank.widget.NumberTextView
         android:id="@+id/tv_time"
@@ -24,5 +26,5 @@
         android:text="2017-01-17"
         android:textColor="@color/white"
         android:textSize="25sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
 </RelativeLayout>

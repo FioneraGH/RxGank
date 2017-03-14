@@ -3,11 +3,10 @@ package com.fionera.rxgank.ui;
 import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
-import android.view.ViewTreeObserver;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.drawable.ScalingUtils;
+import com.facebook.drawee.view.DraweeTransition;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.fionera.base.activity.BaseActivity;
 import com.fionera.base.util.L;
@@ -21,23 +20,28 @@ public class ImageDetailActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_detail);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setSharedElementEnterTransition(DraweeTransition
+                    .createTransitionSet(ScalingUtils.ScaleType.CENTER_CROP,
+                            ScalingUtils.ScaleType.FIT_CENTER));
+            getWindow().setSharedElementReturnTransition(DraweeTransition
+                    .createTransitionSet(ScalingUtils.ScaleType.FIT_CENTER,
+                            ScalingUtils.ScaleType.CENTER_CROP));
+        }
+
         final SimpleDraweeView ivImageDetailPreview = (SimpleDraweeView) findViewById(R.id.iv_image_detail_preview);
         ivImageDetailPreview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finishAfterTransition();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    finishAfterTransition();
+                } else {
+                    finish();
+                }
             }
         });
 
-        /*
-         delay show temp
-         */
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                ivImageDetailPreview.setImageURI(getIntent().getStringExtra("imageUrl"));
-            }
-        }, 500);
+        ivImageDetailPreview.setImageURI(getIntent().getStringExtra("imageUrl"));
     }
 
     /**
