@@ -17,20 +17,21 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class ApiManager {
-    public static Observable<GankDayResults> getGankDay(ApiService apiService, int year, int mouth,
+    public static Observable<GankDayResults> getGankDay(int year, int mouth,
                                                         int day) {
-        return apiService.getGankDay(year, mouth, day).map(new CommonFilter<GankDayResults>())
-                .compose(ApiManager.<GankDayResults>httpTransformer());
+        return AppComponentHolder.getAppComponent().getApiService().getGankDay(year, mouth, day)
+                .map(new CommonFilter<GankDayResults>()).compose(
+                        ApiManager.<GankDayResults>httpTransformer());
     }
 
     private static class CommonFilter<T>
             implements Function<BaseEntity<T>, T> {
         @Override
         public T apply(BaseEntity<T> t) throws Exception {
-            if (t.error) {
+            if (t.isError()) {
                 throw new HttpTimeException("网络错误");
             }
-            return t.results;
+            return t.getResults();
         }
     }
 

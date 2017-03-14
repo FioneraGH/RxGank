@@ -7,9 +7,9 @@ public class RequestParams {
 
     private static final int MS_OF_DAY = 24 * 60 * 60 * 1000;
 
-    public int year;
-    public int month;
-    public int day;
+    int year;
+    int month;
+    int day;
 
     private Date currentDate;
     private int successTimes;
@@ -46,7 +46,7 @@ public class RequestParams {
     }
 
     public boolean isComplete() {
-        return successTimes >= 3 || errorTimes >= 10 || emptyTimes >= 30;
+        return successTimes >= 1 || errorTimes >= 10 || emptyTimes >= 30;
     }
 
     private void processDate(Date date) {

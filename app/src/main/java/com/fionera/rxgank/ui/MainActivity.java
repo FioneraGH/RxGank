@@ -2,13 +2,12 @@ package com.fionera.rxgank.ui;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.transition.Slide;
-import android.view.Gravity;
-import android.view.Window;
 
 import com.fionera.base.activity.BaseActivity;
+import com.fionera.base.util.L;
 import com.fionera.base.util.ShowToast;
 import com.fionera.rxgank.R;
+import com.fionera.rxgank.entity.UserPo;
 import com.fionera.rxgank.fragment.GankFragment;
 
 import java.util.concurrent.TimeUnit;
@@ -17,6 +16,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Timed;
+import io.realm.Realm;
 
 /**
  * MainActivity
@@ -27,6 +27,7 @@ public class MainActivity
         extends BaseActivity {
 
     private static final int TIME_TO_EXIT = 2000;
+    private final Realm REALM_INSTANCE = Realm.getDefaultInstance();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,7 +59,7 @@ public class MainActivity
         }).subscribe(new Consumer<Timed<Integer>>() {
             @Override
             public void accept(Timed<Integer> timed) throws Exception {
-                finish();
+                moveTaskToBack(true);
             }
         }, new Consumer<Throwable>() {
             @Override
@@ -66,6 +67,18 @@ public class MainActivity
                 throwable.printStackTrace();
             }
         });
+
+        UserPo userPo = new UserPo();
+        userPo.setId("1");
+        userPo.setName("hello");
+        userPo.setHeadUrl("http://ddsd.com/sd.png");
+        userPo.setUpdateTime(System.nanoTime());
+        REALM_INSTANCE.beginTransaction();
+        REALM_INSTANCE.copyToRealmOrUpdate(userPo);
+        REALM_INSTANCE.commitTransaction();
+
+        userPo = REALM_INSTANCE.where(UserPo.class).equalTo("id", "1").findFirst();
+        L.d(userPo.getHeadUrl());
     }
 
     @Override

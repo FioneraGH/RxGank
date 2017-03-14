@@ -10,6 +10,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Singleton;
@@ -17,6 +20,9 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import okhttp3.Cache;
+import okhttp3.Cookie;
+import okhttp3.CookieJar;
+import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
@@ -48,7 +54,20 @@ public class AppModule {
         Cache cache = new Cache(cacheFile, 1024 * 1024 * 10);
 
         OkHttpClient.Builder builder = new OkHttpClient.Builder().connectTimeout(10,
-                TimeUnit.SECONDS).addInterceptor(new LogInterceptor()).cache(cache);
+                TimeUnit.SECONDS).addInterceptor(new LogInterceptor()).cookieJar(new CookieJar() {
+            private final HashMap<HttpUrl, List<Cookie>> cookiesStore = new HashMap<>();
+
+            @Override
+            public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
+                cookiesStore.put(HttpUrl.parse(url.host()), cookies);
+            }
+
+            @Override
+            public List<Cookie> loadForRequest(HttpUrl url) {
+                List<Cookie> cookies = cookiesStore.get(HttpUrl.parse(url.host()));
+                return cookies == null ? new ArrayList<Cookie>() : cookies;
+            }
+        }).cache(cache);
 
         return builder.build();
     }

@@ -5,5 +5,6 @@ package com.fionera.rxgank.entity;
  * Created by fionera on 17-2-8 in MVPPractice.
  */
 
-public class GankItemGirl extends GankItem{
+public class GankItemGirl
+        extends GankItem {
 }

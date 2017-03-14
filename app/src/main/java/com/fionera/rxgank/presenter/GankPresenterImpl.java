@@ -2,7 +2,6 @@ package com.fionera.rxgank.presenter;
 
 import com.fionera.base.util.Utils;
 import com.fionera.rxgank.contract.GankContract;
-import com.fionera.rxgank.http.ApiService;
 import com.fionera.rxgank.model.GankModelImpl;
 import com.fionera.rxgank.model.RequestParams;
 
@@ -25,9 +24,9 @@ public class GankPresenterImpl
     private RequestParams requestParams;
 
     @Inject
-    GankPresenterImpl(GankContract.View view, ApiService apiService) {
+    GankPresenterImpl(GankContract.View view) {
         this.view = view;
-        this.model = new GankModelImpl(apiService);
+        this.model = new GankModelImpl();
     }
 
     @Override

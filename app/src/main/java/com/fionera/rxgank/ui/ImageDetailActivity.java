@@ -1,17 +1,14 @@
 package com.fionera.rxgank.ui;
 
 import android.annotation.SuppressLint;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.fionera.base.activity.BaseActivity;
 import com.fionera.base.util.L;
 import com.fionera.rxgank.R;
@@ -24,7 +21,7 @@ public class ImageDetailActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_detail);
 
-        final ImageView ivImageDetailPreview = (ImageView) findViewById(R.id.iv_image_detail_preview);
+        final SimpleDraweeView ivImageDetailPreview = (SimpleDraweeView) findViewById(R.id.iv_image_detail_preview);
         ivImageDetailPreview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -33,31 +30,14 @@ public class ImageDetailActivity
         });
 
         /*
-         try to delay share animation
+         delay show temp
          */
-        postponeEnterTransition();
-        Glide.with(mContext).load(getIntent().getStringExtra("imageUrl")).into(new SimpleTarget<GlideDrawable>() {
+        new Handler().postDelayed(new Runnable() {
             @Override
-            public void onResourceReady(GlideDrawable resource,
-                                        GlideAnimation<? super GlideDrawable> glideAnimation) {
-                ivImageDetailPreview.getViewTreeObserver().addOnPreDrawListener(
-                        new ViewTreeObserver.OnPreDrawListener() {
-                            @Override
-                            public boolean onPreDraw() {
-                                L.d("ImageDetail onPreDraw");
-                                ivImageDetailPreview.getViewTreeObserver().removeOnPreDrawListener(this);
-                                startPostponedEnterTransition();
-                                return true;
-                            }
-                        });
-                ivImageDetailPreview.setImageDrawable(resource);
+            public void run() {
+                ivImageDetailPreview.setImageURI(getIntent().getStringExtra("imageUrl"));
             }
-
-            @Override
-            public void onLoadFailed(Exception e, Drawable errorDrawable) {
-                startPostponedEnterTransition();
-            }
-        });
+        }, 500);
     }
 
     /**

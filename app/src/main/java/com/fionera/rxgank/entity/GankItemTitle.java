@@ -7,16 +7,14 @@ package com.fionera.rxgank.entity;
 
 public class GankItemTitle
         extends GankItem {
-    public GankItemTitle() {
-    }
 
     public GankItemTitle(GankItem item) {
-        type = item.type;
-        desc = item.desc;
-        who = item.who;
-        url = item.url;
-        images = item.images;
-        createdAt = item.createdAt;
-        publishedAt = item.publishedAt;
+        setType(item.getType());
+        setDesc(item.getDesc());
+        setWho(item.getWho());
+        setUrl(item.getUrl());
+        setImages(item.getImages());
+        setCreatedAt(item.getCreatedAt());
+        setPublishedAt(item.getPublishedAt());
     }
 }

@@ -3,10 +3,8 @@ package com.fionera.rxgank.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -16,18 +14,21 @@ import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.fionera.base.util.ImageUtil;
-import com.fionera.base.util.ShowToast;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.fionera.rxgank.R;
 import com.fionera.rxgank.entity.GankItem;
 import com.fionera.rxgank.entity.GankItemGirl;
 import com.fionera.rxgank.entity.GankItemTitle;
 import com.fionera.rxgank.ui.ImageDetailActivity;
+import com.jakewharton.rxbinding2.view.RxView;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
 
 /**
  * GankDayAdapter
@@ -66,52 +67,55 @@ public class GankDayAdapter
             case TYPE_GIRL:
                 final GankDayGirlHolder gankDayGirlHolder = (GankDayGirlHolder) viewHolder;
                 final GankItemGirl gankItemGirl = (GankItemGirl) list.get(position);
-                ImageUtil.loadImage(gankItemGirl.url, gankDayGirlHolder.iv_girl);
-                gankDayGirlHolder.tv_time.setText(gankItemGirl.publishedAt);
-                gankDayGirlHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        context.startActivity(new Intent(context, ImageDetailActivity.class)
-                                .putExtra("imageUrl", gankItemGirl.url), ActivityOptionsCompat
-                                .makeSceneTransitionAnimation((Activity) context,
-                                        gankDayGirlHolder.iv_girl,
-                                        context.getString(R.string.share_image)).toBundle());
-                    }
-                });
+                gankDayGirlHolder.iv_girl.setImageURI(gankItemGirl.getUrl());
+                gankDayGirlHolder.tv_time.setText(gankItemGirl.getPublishedAt());
+                RxView.clicks(gankDayGirlHolder.itemView).throttleFirst(1, TimeUnit.SECONDS)
+                        .subscribe(new Consumer<Object>() {
+                            @Override
+                            public void accept(@NonNull Object o) throws Exception {
+                                context.startActivity(new Intent(context, ImageDetailActivity.class)
+                                                .putExtra("imageUrl", gankItemGirl.getUrl()),
+                                        ActivityOptionsCompat
+                                                .makeSceneTransitionAnimation((Activity) context,
+                                                        gankDayGirlHolder.iv_girl,
+                                                        context.getString(R.string.share_image))
+                                                .toBundle());
+                            }
+                        });
                 break;
             case TYPE_TITLE:
                 GankDayTitleHolder gankTitleHolder = (GankDayTitleHolder) viewHolder;
                 GankItemTitle gankItemTitle = (GankItemTitle) list.get(position);
-                gankTitleHolder.tv_title.setText(gankItemTitle.type);
-                gankTitleHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ShowToast.show("GankTitle");
-                    }
-                });
+                gankTitleHolder.tv_title.setText(gankItemTitle.getType());
+                RxView.clicks(gankTitleHolder.itemView).throttleFirst(1, TimeUnit.SECONDS)
+                        .subscribe(new Consumer<Object>() {
+                            @Override
+                            public void accept(@NonNull Object o) throws Exception {
+                            }
+                        });
                 break;
             case TYPE_NORMAL:
                 GankDayHolder gankDayHolder = (GankDayHolder) viewHolder;
                 GankItem gankItem = (GankItem) list.get(position);
-                if (TextUtils.isEmpty(gankItem.who)) {
-                    gankDayHolder.tv_desc.setText(gankItem.desc);
+                if (TextUtils.isEmpty(gankItem.getWho())) {
+                    gankDayHolder.tv_desc.setText(gankItem.getDesc());
                 } else {
-                    int start = gankItem.desc.length();
-                    int end = start + gankItem.who.length() + 3;
+                    int start = gankItem.getDesc().length();
+                    int end = start + gankItem.getWho().length() + 3;
                     int color = ContextCompat.getColor(context, R.color.text_default);
                     SpannableStringBuilder builder = new SpannableStringBuilder(
-                            gankItem.desc + " - " + gankItem.who);
+                            gankItem.getDesc() + " - " + gankItem.getWho());
                     builder.setSpan(new ForegroundColorSpan(color), start, end,
                             Spanned.SPAN_INCLUSIVE_INCLUSIVE);
                     builder.setSpan(new RelativeSizeSpan(0.85f), start, end,
                             Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
                     gankDayHolder.tv_desc.setText(builder);
-                    gankDayHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            ShowToast.show("GankItem");
-                        }
-                    });
+                    RxView.clicks(gankDayHolder.itemView).throttleFirst(1, TimeUnit.SECONDS)
+                            .subscribe(new Consumer<Object>() {
+                                @Override
+                                public void accept(@NonNull Object o) throws Exception {
+                                }
+                            });
                 }
                 break;
         }
@@ -150,12 +154,12 @@ public class GankDayAdapter
 
     private class GankDayGirlHolder
             extends RecyclerView.ViewHolder {
-        ImageView iv_girl;
+        SimpleDraweeView iv_girl;
         TextView tv_time;
 
         GankDayGirlHolder(View itemView) {
             super(itemView);
-            iv_girl = (ImageView) itemView.findViewById(R.id.iv_girl);
+            iv_girl = (SimpleDraweeView) itemView.findViewById(R.id.iv_girl);
             tv_time = (TextView) itemView.findViewById(R.id.tv_time);
         }
     }

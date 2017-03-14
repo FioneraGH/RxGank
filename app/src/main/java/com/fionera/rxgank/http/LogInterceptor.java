@@ -21,6 +21,7 @@ public class LogInterceptor
     public Response intercept(Chain chain) throws IOException {
         Request request = chain.request();
         L.d("Logging Request:" + request.url().toString());
+        L.d("Logging Request Header:" + request.headers());
 
         Response response = chain.proceed(request);
         if (response != null && response.body() != null) {
