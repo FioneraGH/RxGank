@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="150dp">
 
-    <com.facebook.drawee.view.SimpleDraweeView
+    <com.fionera.base.widget.CommonImageView
         android:id="@+id/iv_girl"
         android:layout_width="match_parent"
         android:layout_height="150dp"

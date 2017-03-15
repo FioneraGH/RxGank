@@ -1,8 +1,10 @@
 package com.fionera.rxgank.ui;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.view.View;
 
 import com.facebook.drawee.drawable.ScalingUtils;
@@ -15,6 +17,7 @@ import com.fionera.rxgank.R;
 public class ImageDetailActivity
         extends BaseActivity {
 
+    @SuppressLint("ObsoleteSdkInt")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,11 +36,7 @@ public class ImageDetailActivity
         ivImageDetailPreview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    finishAfterTransition();
-                } else {
-                    finish();
-                }
+                ActivityCompat.finishAfterTransition(mActivity);
             }
         });
 
@@ -51,7 +50,6 @@ public class ImageDetailActivity
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        L.d("ImageDetail WindowFocus:" + hasFocus);
         if (hasFocus && Build.VERSION.SDK_INT >= 19) {
             View decorView = getWindow().getDecorView();
             decorView.setSystemUiVisibility(

@@ -3,6 +3,7 @@ package com.fionera.rxgank.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -73,7 +74,8 @@ public class GankDayAdapter
                         .subscribe(new Consumer<Object>() {
                             @Override
                             public void accept(@NonNull Object o) throws Exception {
-                                context.startActivity(new Intent(context, ImageDetailActivity.class)
+                                ActivityCompat.startActivity(context,
+                                        new Intent(context, ImageDetailActivity.class)
                                                 .putExtra("imageUrl", gankItemGirl.getUrl()),
                                         ActivityOptionsCompat
                                                 .makeSceneTransitionAnimation((Activity) context,

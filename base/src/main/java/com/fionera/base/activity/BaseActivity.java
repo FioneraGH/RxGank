@@ -1,5 +1,6 @@
 package com.fionera.base.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,7 +16,6 @@ import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.Subject;
 
-
 /**
  * BaseActivity
  * Created by fionera on 17-1-9 in AndroidDemo.
@@ -27,12 +27,14 @@ public class BaseActivity
     public Subject<Integer> lifecycle = PublishSubject.create();
 
     protected Context mContext;
+    protected Activity mActivity;
     protected boolean isDestroy;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = this;
+        mActivity = this;
         isDestroy = false;
         setStatusBarTranslucent(false);
     }

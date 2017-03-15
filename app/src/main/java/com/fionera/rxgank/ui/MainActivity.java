@@ -3,6 +3,8 @@ package com.fionera.rxgank.ui;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
+import com.facebook.drawee.drawable.ScalingUtils;
+import com.facebook.drawee.view.DraweeTransition;
 import com.fionera.base.activity.BaseActivity;
 import com.fionera.base.util.L;
 import com.fionera.base.util.ShowToast;
@@ -27,7 +29,6 @@ public class MainActivity
         extends BaseActivity {
 
     private static final int TIME_TO_EXIT = 2000;
-    private final Realm REALM_INSTANCE = Realm.getDefaultInstance();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -67,18 +68,6 @@ public class MainActivity
                 throwable.printStackTrace();
             }
         });
-
-        UserPo userPo = new UserPo();
-        userPo.setId("1");
-        userPo.setName("hello");
-        userPo.setHeadUrl("http://ddsd.com/sd.png");
-        userPo.setUpdateTime(System.nanoTime());
-        REALM_INSTANCE.beginTransaction();
-        REALM_INSTANCE.copyToRealmOrUpdate(userPo);
-        REALM_INSTANCE.commitTransaction();
-
-        userPo = REALM_INSTANCE.where(UserPo.class).equalTo("id", "1").findFirst();
-        L.d(userPo.getHeadUrl());
     }
 
     @Override

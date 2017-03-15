@@ -2,7 +2,9 @@ package com.fionera.rxgank.dagger;
 
 import android.app.Application;
 
+import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.fionera.base.BaseApplication;
+import com.fionera.rxgank.BuildConfig;
 import com.fionera.rxgank.http.ApiService;
 import com.fionera.rxgank.http.HttpConstants;
 import com.fionera.rxgank.http.LogInterceptor;
@@ -54,7 +56,7 @@ public class AppModule {
         Cache cache = new Cache(cacheFile, 1024 * 1024 * 10);
 
         OkHttpClient.Builder builder = new OkHttpClient.Builder().connectTimeout(10,
-                TimeUnit.SECONDS).addInterceptor(new LogInterceptor()).cookieJar(new CookieJar() {
+                TimeUnit.SECONDS).cookieJar(new CookieJar() {
             private final HashMap<HttpUrl, List<Cookie>> cookiesStore = new HashMap<>();
 
             @Override
@@ -68,6 +70,11 @@ public class AppModule {
                 return cookies == null ? new ArrayList<Cookie>() : cookies;
             }
         }).cache(cache);
+
+        if (BuildConfig.DEBUG) {
+            builder.addInterceptor(new LogInterceptor()).addNetworkInterceptor(
+                    new StethoInterceptor());
+        }
 
         return builder.build();
     }

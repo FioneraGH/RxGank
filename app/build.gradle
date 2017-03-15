@@ -37,8 +37,14 @@ dependencies {
     debugCompile project(path: ':base', configuration: 'debug')
     releaseCompile project(path: ':base', configuration: 'release')
 
-    // Dagger2
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.google.dagger:dagger-android:2.9'
+
+    // Dagger2
+    compile 'com.google.dagger:dagger-android:2.10-rc4'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.9'
+
+    // Stetho-OkHttp-Realm
+    debugCompile 'com.facebook.stetho:stetho:1.4.2'
+    debugCompile 'com.facebook.stetho:stetho-okhttp3:1.4.2'
+    debugCompile 'com.uphyca:stetho_realm:2.0.0'
 }

@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context="com.fionera.rxgank.ui.ImageDetailActivity">
 
-    <com.facebook.drawee.view.SimpleDraweeView
+    <com.fionera.base.widget.CommonImageView
         android:id="@+id/iv_image_detail_preview"
         android:layout_width="0dp"
         android:layout_height="0dp"
