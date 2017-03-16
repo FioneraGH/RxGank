@@ -4,18 +4,25 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+import io.realm.RealmObject;
+import io.realm.annotations.Ignore;
+import io.realm.annotations.PrimaryKey;
+
 /**
  * GankItem
  * Created by fionera on 17-2-8 in MVPPractice.
  */
 
-public class GankItem {
+public class GankItem
+        extends RealmObject {
+    @PrimaryKey
     @SerializedName("_id")
     private String id;
     private String type;
     private String desc;
     private String who;
     private String url;
+    @Ignore
     private List<String> images;
     private String createdAt;
     private String publishedAt;

@@ -5,16 +5,19 @@ package com.fionera.rxgank.entity;
  * Created by fionera on 17-2-8 in MVPPractice.
  */
 
-public class GankItemTitle
-        extends GankItem {
+public class GankItemTitle {
+
+    private String type;
 
     public GankItemTitle(GankItem item) {
         setType(item.getType());
-        setDesc(item.getDesc());
-        setWho(item.getWho());
-        setUrl(item.getUrl());
-        setImages(item.getImages());
-        setCreatedAt(item.getCreatedAt());
-        setPublishedAt(item.getPublishedAt());
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

@@ -1,7 +1,6 @@
 package com.fionera.rxgank.ui;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -11,7 +10,6 @@ import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.DraweeTransition;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.fionera.base.activity.BaseActivity;
-import com.fionera.base.util.L;
 import com.fionera.rxgank.R;
 
 public class ImageDetailActivity

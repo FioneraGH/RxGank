@@ -3,13 +3,17 @@ package com.fionera.rxgank;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.stetho.Stetho;
 import com.fionera.base.BaseApplication;
+import com.fionera.base.util.ActivityStackManager;
 import com.fionera.rxgank.dagger.AppComponent;
 import com.fionera.rxgank.dagger.AppComponentHolder;
 import com.fionera.rxgank.dagger.AppModule;
 import com.fionera.rxgank.dagger.DaggerAppComponent;
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 
+import io.realm.DynamicRealm;
 import io.realm.Realm;
+import io.realm.RealmConfiguration;
+import io.realm.RealmMigration;
 
 /**
  * GankApp
@@ -30,6 +34,11 @@ public class GankApp
         Fresco.initialize(this);
 
         Realm.init(this);
+        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder().schemaVersion(1)
+                .deleteRealmIfMigrationNeeded().build();
+        Realm.setDefaultConfiguration(realmConfiguration);
+
+        ActivityStackManager.getInstance().init(this);
 
         Stetho.initialize(Stetho.newInitializerBuilder(this).enableDumpapp(
                 Stetho.defaultDumperPluginsProvider(this))

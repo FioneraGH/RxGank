@@ -1,5 +1,8 @@
 package com.fionera.rxgank.model;
 
+import android.text.TextUtils;
+
+import com.fionera.base.util.L;
 import com.fionera.base.util.Utils;
 import com.fionera.rxgank.contract.GankContract;
 import com.fionera.rxgank.entity.GankDayResults;
@@ -8,12 +11,14 @@ import com.fionera.rxgank.http.ApiManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
-import io.reactivex.schedulers.Schedulers;
+import io.realm.Realm;
 
 /**
  * Created by fionera on 2017/02/08
@@ -22,17 +27,20 @@ import io.reactivex.schedulers.Schedulers;
 public class GankModelImpl
         implements GankContract.Model {
 
+    private final Realm instance = Realm.getDefaultInstance();
+
     @Override
     public Observable<List<Object>> fetchData(final boolean isLoadMore,
-                                              RequestParams requestParams) {
-        return ApiManager.getGankDay(requestParams.year, requestParams.month,
-                requestParams.day).subscribeOn(Schedulers.io()).observeOn(
-                AndroidSchedulers.mainThread()).filter(new Predicate<GankDayResults>() {
-            @Override
-            public boolean test(GankDayResults gankDayResults) throws Exception {
-                return gankDayResults != null;
-            }
-        }).filter(new Predicate<GankDayResults>() {
+                                              final RequestParams requestParams) {
+        final String gankDate = String.format(Locale.CHINA, "%d-%d-%d", requestParams.year,
+                requestParams.month, requestParams.day);
+        return fetchFromNetwork(requestParams).filter(
+                new Predicate<GankDayResults>() {
+                    @Override
+                    public boolean test(GankDayResults gankDayResults) throws Exception {
+                        return gankDayResults != null;
+                    }
+                }).filter(new Predicate<GankDayResults>() {
             @Override
             public boolean test(GankDayResults gankDayResults) throws Exception {
                 return gankDayResults != null;
@@ -40,7 +48,47 @@ public class GankModelImpl
         }).map(new Function<GankDayResults, List<Object>>() {
             @Override
             public List<Object> apply(GankDayResults gankDayResults) throws Exception {
+                saveToRealm(gankDate, gankDayResults);
                 return flatGankDay2List(gankDayResults);
+            }
+        });
+    }
+
+    private Observable<GankDayResults> fetchFromNetwork(RequestParams requestParams) {
+        return ApiManager.getGankDay(requestParams.year, requestParams.month, requestParams.day);
+    }
+
+    private Observable<GankDayResults> fetchFromRealm(final String gankDate) {
+        return Observable.create(new ObservableOnSubscribe<GankDayResults>() {
+            @Override
+            public void subscribe(ObservableEmitter<GankDayResults> e) throws Exception {
+                instance.beginTransaction();
+                GankDayResults gankDayResults = instance.where(GankDayResults.class).equalTo(
+                        "gankDate", gankDate).findFirst();
+                L.d("Model Read Data:" + gankDayResults);
+                instance.commitTransaction();
+                e.onNext(gankDayResults);
+                e.onComplete();
+            }
+        });
+    }
+
+    private void saveToRealm(final String gankDate, final GankDayResults gankDayResults) {
+        instance.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                /*
+                empty from network
+                 */
+                if (TextUtils.isEmpty(gankDayResults.getGankDate())) {
+                    long startTime = System.currentTimeMillis();
+                    L.d("Model Save Data Start:" + startTime);
+                    gankDayResults.setGankDate(gankDate);
+                    instance.copyToRealmOrUpdate(gankDayResults);
+                    long endTime = System.currentTimeMillis();
+                    L.d("Model Save Data End:" + endTime);
+                    L.d("Model Save Data Period:" + (endTime - startTime));
+                }
             }
         });
     }

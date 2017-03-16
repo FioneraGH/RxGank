@@ -3,14 +3,13 @@ package com.fionera.rxgank.ui;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
-import com.facebook.drawee.drawable.ScalingUtils;
-import com.facebook.drawee.view.DraweeTransition;
 import com.fionera.base.activity.BaseActivity;
 import com.fionera.base.util.L;
 import com.fionera.base.util.ShowToast;
 import com.fionera.rxgank.R;
-import com.fionera.rxgank.entity.UserPo;
+import com.fionera.rxgank.entity.GankDayResults;
 import com.fionera.rxgank.fragment.GankFragment;
+import com.google.gson.Gson;
 
 import java.util.concurrent.TimeUnit;
 
@@ -68,6 +67,25 @@ public class MainActivity
                 throwable.printStackTrace();
             }
         });
+
+        Realm instance = Realm.getDefaultInstance();
+        final GankDayResults gankDayResults = instance.where(GankDayResults.class).equalTo(
+                "iOS.who", "Lhw").findFirst();
+        if (gankDayResults != null) {
+            L.d(gankDayResults.toString());
+            /*
+            copy element from realm to be serialized
+             */
+            GankDayResults newGankDayResults = instance.copyFromRealm(gankDayResults);
+            L.d(gankDayResults.toString() + new Gson().toJson(newGankDayResults));
+
+            instance.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    gankDayResults.cascadeDelete();
+                }
+            });
+        }
     }
 
     @Override
