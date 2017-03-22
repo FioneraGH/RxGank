@@ -2,8 +2,8 @@ apply plugin: 'com.android.application'
 apply plugin: 'realm-android'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion 'android-O'
+    buildToolsVersion '26.0.0 rc1'
 
     defaultConfig {
         applicationId "com.fionera.rxgank"
@@ -41,7 +41,7 @@ dependencies {
 
     // Dagger2
     compile 'com.google.dagger:dagger-android:2.10-rc4'
-    annotationProcessor 'com.google.dagger:dagger-compiler:2.9'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.10-rc4'
 
     // Stetho-OkHttp-Realm
     debugCompile 'com.facebook.stetho:stetho:1.4.2'

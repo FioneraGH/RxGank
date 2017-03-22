@@ -27,8 +27,6 @@ import io.realm.Realm;
 public class GankModelImpl
         implements GankContract.Model {
 
-    private final Realm instance = Realm.getDefaultInstance();
-
     @Override
     public Observable<List<Object>> fetchData(final boolean isLoadMore,
                                               final RequestParams requestParams) {
@@ -62,6 +60,7 @@ public class GankModelImpl
         return Observable.create(new ObservableOnSubscribe<GankDayResults>() {
             @Override
             public void subscribe(ObservableEmitter<GankDayResults> e) throws Exception {
+                final Realm instance = Realm.getDefaultInstance();
                 instance.beginTransaction();
                 GankDayResults gankDayResults = instance.where(GankDayResults.class).equalTo(
                         "gankDate", gankDate).findFirst();
@@ -69,11 +68,13 @@ public class GankModelImpl
                 instance.commitTransaction();
                 e.onNext(gankDayResults);
                 e.onComplete();
+                instance.close();
             }
         });
     }
 
     private void saveToRealm(final String gankDate, final GankDayResults gankDayResults) {
+        final Realm instance = Realm.getDefaultInstance();
         instance.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
@@ -91,6 +92,7 @@ public class GankModelImpl
                 }
             }
         });
+        instance.close();
     }
 
     private List<Object> flatGankDay2List(GankDayResults results) {

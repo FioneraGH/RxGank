@@ -1,8 +1,12 @@
 package com.fionera.rxgank.adapter;
 
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
@@ -18,6 +22,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.fionera.base.receiver.ActionBroadcastReceiver;
+import com.fionera.base.util.customtabs.CustomTabActivityHelper;
+import com.fionera.base.util.customtabs.WebViewFallback;
 import com.fionera.rxgank.R;
 import com.fionera.rxgank.entity.GankItem;
 import com.fionera.rxgank.entity.GankItemGirl;
@@ -98,7 +105,7 @@ public class GankDayAdapter
                 break;
             case TYPE_NORMAL:
                 GankDayHolder gankDayHolder = (GankDayHolder) viewHolder;
-                GankItem gankItem = (GankItem) list.get(position);
+                final GankItem gankItem = (GankItem) list.get(position);
                 if (TextUtils.isEmpty(gankItem.getWho())) {
                     gankDayHolder.tv_desc.setText(gankItem.getDesc());
                 } else {
@@ -112,13 +119,28 @@ public class GankDayAdapter
                     builder.setSpan(new RelativeSizeSpan(0.85f), start, end,
                             Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
                     gankDayHolder.tv_desc.setText(builder);
-                    RxView.clicks(gankDayHolder.itemView).throttleFirst(1, TimeUnit.SECONDS)
-                            .subscribe(new Consumer<Object>() {
-                                @Override
-                                public void accept(@NonNull Object o) throws Exception {
-                                }
-                            });
                 }
+                RxView.clicks(gankDayHolder.itemView).throttleFirst(1, TimeUnit.SECONDS).subscribe(
+                        new Consumer<Object>() {
+                            @Override
+                            public void accept(@NonNull Object o) throws Exception {
+                                PendingIntent pendingIntent = createPendingIntent(0);
+                                CustomTabsIntent intent = new CustomTabsIntent.Builder()
+                                        .setCloseButtonIcon(BitmapFactory
+                                                .decodeResource(context.getResources(),
+                                                        R.drawable.ic_action_back)).setShowTitle(
+                                                true).setToolbarColor(ContextCompat
+                                                .getColor(context, android.R.color.holo_blue_light))
+                                        .enableUrlBarHiding().addDefaultShareMenuItem()
+                                        .setActionButton(BitmapFactory
+                                                        .decodeResource(context.getResources(),
+                                                                R.drawable.ic_action_more), "fuck" +
+                                                        " to show",
+                                                pendingIntent).build();
+                                CustomTabActivityHelper.openCustomTab((Activity) context, intent,
+                                        Uri.parse(gankItem.getUrl()), new WebViewFallback());
+                            }
+                        });
                 break;
         }
     }
@@ -132,6 +154,12 @@ public class GankDayAdapter
     public int getItemViewType(int position) {
         return (list.get(position) instanceof GankItemTitle) ? TYPE_TITLE : (list.get(
                 position) instanceof GankItemGirl) ? TYPE_GIRL : TYPE_NORMAL;
+    }
+
+    private PendingIntent createPendingIntent(int actionSourceId) {
+        Intent actionIntent = new Intent(context, ActionBroadcastReceiver.class);
+        actionIntent.putExtra(ActionBroadcastReceiver.KEY_ACTION_SOURCE, actionSourceId);
+        return PendingIntent.getBroadcast(context, actionSourceId, actionIntent, 0);
     }
 
     private class GankDayHolder

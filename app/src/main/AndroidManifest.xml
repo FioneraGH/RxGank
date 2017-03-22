@@ -27,6 +27,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.ImageDetailActivity" />
+
+        <receiver android:name="com.fionera.base.receiver.ActionBroadcastReceiver"/>
     </application>
 
 </manifest>
