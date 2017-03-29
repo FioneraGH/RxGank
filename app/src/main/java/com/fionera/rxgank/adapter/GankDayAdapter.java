@@ -2,6 +2,7 @@ package com.fionera.rxgank.adapter;
 
 import android.app.Activity;
 import android.app.PendingIntent;
+import android.app.SharedElementCallback;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
@@ -81,6 +82,22 @@ public class GankDayAdapter
                         .subscribe(new Consumer<Object>() {
                             @Override
                             public void accept(@NonNull Object o) throws Exception {
+                                ((Activity) context).setExitSharedElementCallback(
+                                        new SharedElementCallback() {
+                                            @Override
+                                            public void onSharedElementStart(
+                                                    List<String> sharedElementNames,
+                                                    List<View> sharedElements,
+                                                    List<View> sharedElementSnapshots) {
+                                                super.onSharedElementStart(sharedElementNames,
+                                                        sharedElements, sharedElementSnapshots);
+                                                for (View view : sharedElements) {
+                                                    if (view instanceof SimpleDraweeView) {
+                                                        view.setVisibility(View.VISIBLE);
+                                                    }
+                                                }
+                                            }
+                                        });
                                 ActivityCompat.startActivity(context,
                                         new Intent(context, ImageDetailActivity.class)
                                                 .putExtra("imageUrl", gankItemGirl.getUrl()),
@@ -124,7 +141,7 @@ public class GankDayAdapter
                         new Consumer<Object>() {
                             @Override
                             public void accept(@NonNull Object o) throws Exception {
-                                PendingIntent pendingIntent = createPendingIntent(0);
+                                PendingIntent pendingIntent = createPendingIntent();
                                 CustomTabsIntent intent = new CustomTabsIntent.Builder()
                                         .setCloseButtonIcon(BitmapFactory
                                                 .decodeResource(context.getResources(),
@@ -156,10 +173,10 @@ public class GankDayAdapter
                 position) instanceof GankItemGirl) ? TYPE_GIRL : TYPE_NORMAL;
     }
 
-    private PendingIntent createPendingIntent(int actionSourceId) {
+    private PendingIntent createPendingIntent() {
         Intent actionIntent = new Intent(context, ActionBroadcastReceiver.class);
-        actionIntent.putExtra(ActionBroadcastReceiver.KEY_ACTION_SOURCE, actionSourceId);
-        return PendingIntent.getBroadcast(context, actionSourceId, actionIntent, 0);
+        actionIntent.putExtra(ActionBroadcastReceiver.KEY_ACTION_SOURCE, 0);
+        return PendingIntent.getBroadcast(context, 0, actionIntent, 0);
     }
 
     private class GankDayHolder
