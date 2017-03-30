@@ -28,5 +28,10 @@ public class GankApp
         Fresco.initialize(this);
 
         Realm.init(this);
+        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder().schemaVersion(1)
+                .deleteRealmIfMigrationNeeded().build();
+        Realm.setDefaultConfiguration(realmConfiguration);
+
+        ActivityStackManager.getInstance().init(this);
     }
 }

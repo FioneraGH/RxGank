@@ -1,3 +1,8 @@
 <resources>
 
+    <style name="NavigationTextStyle">
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
 </resources>

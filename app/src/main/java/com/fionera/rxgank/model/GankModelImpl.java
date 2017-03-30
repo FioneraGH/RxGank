@@ -19,6 +19,7 @@ import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 import io.realm.Realm;
+import timber.log.Timber;
 
 /**
  * Created by fionera on 2017/02/08
@@ -64,7 +65,7 @@ public class GankModelImpl
                 instance.beginTransaction();
                 GankDayResults gankDayResults = instance.where(GankDayResults.class).equalTo(
                         "gankDate", gankDate).findFirst();
-                L.d("Model Read Data:" + gankDayResults);
+                Timber.d("Model Read Data:%s", gankDayResults);
                 instance.commitTransaction();
                 e.onNext(gankDayResults);
                 e.onComplete();
@@ -83,12 +84,12 @@ public class GankModelImpl
                  */
                 if (TextUtils.isEmpty(gankDayResults.getGankDate())) {
                     long startTime = System.currentTimeMillis();
-                    L.d("Model Save Data Start:" + startTime);
+                    Timber.d("Model Save Data Start:%d", startTime);
                     gankDayResults.setGankDate(gankDate);
                     instance.copyToRealmOrUpdate(gankDayResults);
                     long endTime = System.currentTimeMillis();
-                    L.d("Model Save Data End:" + endTime);
-                    L.d("Model Save Data Period:" + (endTime - startTime));
+                    Timber.d("Model Save Data End:%d", endTime);
+                    Timber.d("Model Save Data Period:%d", endTime - startTime);
                 }
             }
         });

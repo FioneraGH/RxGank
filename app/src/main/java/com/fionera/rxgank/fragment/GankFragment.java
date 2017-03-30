@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +18,11 @@ import com.fionera.rxgank.dagger.AppComponentHolder;
 import com.fionera.rxgank.dagger.component.DaggerGankComponent;
 import com.fionera.rxgank.dagger.component.GankComponent;
 import com.fionera.rxgank.dagger.module.GankModule;
+import com.fionera.rxgank.entity.GankItemGirl;
+import com.fionera.rxgank.event.NavigationHeaderUpdateEvent;
 import com.fionera.rxgank.presenter.GankPresenterImpl;
+import com.hwangjr.rxbus.RxBus;
+import com.hwangjr.rxbus.annotation.Produce;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +61,7 @@ public class GankFragment
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.view_gank, container,false);
+        return inflater.inflate(R.layout.fragment_gank, container,false);
     }
 
     @Override
@@ -111,12 +116,25 @@ public class GankFragment
             }
         });
 
+        rvGankDay.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                if (RecyclerView.SCROLL_STATE_IDLE == newState) {
+                    int firstPosition = ((LinearLayoutManager) recyclerView.getLayoutManager())
+                            .findFirstVisibleItemPosition();
+                    updateNavigationHeader(firstPosition);
+                }
+            }
+        });
+
         presenter.onRefresh();
+
+        RxBus.get().register(this);
     }
 
     @Override
     public void onDetachToPresenter() {
-
+        RxBus.get().unregister(this);
     }
 
     @Override
@@ -136,6 +154,10 @@ public class GankFragment
         gankDayList.addAll(list);
         rvGankDay.getAdapter().notifyDataSetChanged();
         rvGankDay.loadMoreComplete(false);
+
+        if (!isLoadMore) {
+            updateNavigationHeader(0);
+        }
     }
 
     @Override
@@ -148,5 +170,18 @@ public class GankFragment
     public void onEmpty() {
         srGankDay.setRefreshing(false);
         rvGankDay.loadMoreComplete(false);
+    }
+
+    private void updateNavigationHeader(int position) {
+        if (position >= 0 && gankDayList.size() > position && gankDayList.get(
+                position) instanceof GankItemGirl) {
+            String imageUrl = ((GankItemGirl) gankDayList.get(position)).getUrl();
+            RxBus.get().post(new NavigationHeaderUpdateEvent(imageUrl));
+        }
+    }
+
+    @Produce()
+    public String produceName(){
+        return getClass().getCanonicalName();
     }
 }

@@ -14,6 +14,7 @@ import io.realm.DynamicRealm;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmMigration;
+import timber.log.Timber;
 
 /**
  * GankApp
@@ -44,5 +45,7 @@ public class GankApp
                 Stetho.defaultDumperPluginsProvider(this))
                 .enableWebKitInspector(RealmInspectorModulesProvider.builder(this).build())
                 .build());
+
+        Timber.plant(new Timber.DebugTree());
     }
 }

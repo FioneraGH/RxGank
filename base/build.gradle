@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 'android-O'
+    compileSdkVersion 25
     buildToolsVersion '26.0.0 rc1'
 
     publishNonDefault true
@@ -22,11 +22,15 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:appcompat-v7:26.0.0-alpha1'
-    compile 'com.android.support:recyclerview-v7:26.0.0-alpha1'
-    compile 'com.android.support:support-v4:26.0.0-alpha1'
-    compile 'com.android.support:transition:26.0.0-alpha1'
-    compile 'com.android.support:customtabs:26.0.0-alpha1'
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:recyclerview-v7:25.3.1'
+    compile 'com.android.support:support-v4:25.3.1'
+    compile 'com.android.support:design:25.3.1'
+    compile 'com.android.support:transition:25.3.1'
+    compile 'com.android.support:customtabs:25.3.1'
+    compile 'com.android.support:support-dynamic-animation:25.3.1'
+    // Timber
+    compile 'com.jakewharton.timber:timber:4.5.1'
     // OkHttp
     compile 'com.squareup.okhttp3:okhttp:3.6.0'
     // Fresco
@@ -37,6 +41,10 @@ dependencies {
     compile 'com.squareup.retrofit2:adapter-rxjava2:2.2.0'
     // RxJava
     compile 'io.reactivex.rxjava2:rxjava:2.0.7'
+    // RxBus
+    compile ('com.hwangjr.rxbus:rxbus:2.0.0-beta') {
+        exclude(group:"com.jakewharton.timber", module:"timber")
+    }
     // RxLifecycle
     compile 'com.trello.rxlifecycle2:rxlifecycle:2.0.1'
     compile 'com.trello.rxlifecycle2:rxlifecycle-android:2.0.1'

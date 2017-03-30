@@ -12,7 +12,7 @@ android {
         versionCode 1
         versionName "1.0"
 
-        ndk{
+        ndk {
             abiFilters "armeabi-v7a", "x86"
         }
     }
@@ -27,6 +27,7 @@ android {
             res.srcDirs = [
                     'src/main/res',
                     'src/main/res/layouts/test',
+                    'src/main/res/layouts/recycler_item',
             ]
         }
     }

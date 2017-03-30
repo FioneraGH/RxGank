@@ -1,4 +1,7 @@
 <resources>
-    <string name="app_name">RxGank</string>
+    <string name="app_name">都是干货</string>
     <string name="share_image">ShareImage</string>
+    <string name="home">主页</string>
+    <string name="album">图集</string>
+    <string name="about">关于</string>
 </resources>
