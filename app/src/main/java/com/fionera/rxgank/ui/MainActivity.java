@@ -19,7 +19,6 @@ import com.fionera.rxgank.fragment.GankFragment;
 import com.google.gson.Gson;
 import com.hwangjr.rxbus.RxBus;
 import com.hwangjr.rxbus.annotation.Subscribe;
-import com.hwangjr.rxbus.annotation.Tag;
 
 import java.util.concurrent.TimeUnit;
 
