@@ -1,12 +1,11 @@
 package com.fionera.base.widget;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.view.SimpleDraweeView;
-
-import javax.annotation.Nullable;
 
 /**
  * CommonImageView

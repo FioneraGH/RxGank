@@ -77,27 +77,12 @@ public class GankDayAdapter
                 final GankDayGirlHolder gankDayGirlHolder = (GankDayGirlHolder) viewHolder;
                 final GankItemGirl gankItemGirl = (GankItemGirl) list.get(position);
                 gankDayGirlHolder.iv_girl.setImageURI(gankItemGirl.getUrl());
+                gankDayGirlHolder.iv_girl.setLegacyVisibilityHandlingEnabled(true);
                 gankDayGirlHolder.tv_time.setText(gankItemGirl.getPublishedAt());
                 RxView.clicks(gankDayGirlHolder.itemView).throttleFirst(1, TimeUnit.SECONDS)
                         .subscribe(new Consumer<Object>() {
                             @Override
                             public void accept(@NonNull Object o) throws Exception {
-                                ((Activity) context).setExitSharedElementCallback(
-                                        new SharedElementCallback() {
-                                            @Override
-                                            public void onSharedElementStart(
-                                                    List<String> sharedElementNames,
-                                                    List<View> sharedElements,
-                                                    List<View> sharedElementSnapshots) {
-                                                super.onSharedElementStart(sharedElementNames,
-                                                        sharedElements, sharedElementSnapshots);
-                                                for (View view : sharedElements) {
-                                                    if (view instanceof SimpleDraweeView) {
-                                                        view.setVisibility(View.VISIBLE);
-                                                    }
-                                                }
-                                            }
-                                        });
                                 ActivityCompat.startActivity(context,
                                         new Intent(context, ImageDetailActivity.class)
                                                 .putExtra("imageUrl", gankItemGirl.getUrl()),
