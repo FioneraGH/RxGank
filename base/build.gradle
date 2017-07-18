@@ -42,7 +42,7 @@ dependencies {
     // RxJava
     api 'io.reactivex.rxjava2:rxjava:2.1.1'
     // RxBus
-    api ('com.hwangjr.rxbus:rxbus:2.0.0-beta') {
+    api ('com.hwangjr.rxbus:rxbus:2.0.0') {
         exclude(group:"com.jakewharton.timber", module:"timber")
     }
     // RxLifecycle
