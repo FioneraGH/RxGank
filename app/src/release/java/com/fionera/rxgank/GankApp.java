@@ -2,12 +2,14 @@ package com.fionera.rxgank;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.fionera.base.BaseApplication;
+import com.fionera.base.util.ActivityStackManager;
 import com.fionera.rxgank.dagger.AppComponent;
 import com.fionera.rxgank.dagger.AppComponentHolder;
 import com.fionera.rxgank.dagger.AppModule;
 import com.fionera.rxgank.dagger.DaggerAppComponent;
 
 import io.realm.Realm;
+import io.realm.RealmConfiguration;
 
 /**
  * GankApp

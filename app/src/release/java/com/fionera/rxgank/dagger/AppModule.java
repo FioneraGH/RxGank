@@ -2,7 +2,6 @@ package com.fionera.rxgank.dagger;
 
 import android.app.Application;
 
-import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.fionera.base.BaseApplication;
 import com.fionera.rxgank.BuildConfig;
 import com.fionera.rxgank.http.ApiService;
@@ -71,10 +70,7 @@ public class AppModule {
             }
         }).cache(cache);
 
-        if (BuildConfig.DEBUG) {
-            builder.addInterceptor(new LogInterceptor()).addNetworkInterceptor(
-                    new StethoInterceptor());
-        }
+        builder.addInterceptor(new LogInterceptor());
 
         return builder.build();
     }

@@ -10,10 +10,8 @@ import com.fionera.rxgank.dagger.AppModule;
 import com.fionera.rxgank.dagger.DaggerAppComponent;
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 
-import io.realm.DynamicRealm;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
-import io.realm.RealmMigration;
 import timber.log.Timber;
 
 /**

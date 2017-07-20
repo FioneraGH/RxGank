@@ -1,13 +1,10 @@
 *.iml
 # Built application files
 *.apk
-*.ap_
  
 # Files for the Dalvik VM
-*.dex
  
 # Java class files
-*.class
  
 # Generated files
 bin/
@@ -25,4 +22,7 @@ local.properties
 proguard/
  
 # Log Files
-*.log 
+*.log
+
+# Custom
+app/release/
