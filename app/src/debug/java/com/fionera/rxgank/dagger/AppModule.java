@@ -1,10 +1,10 @@
 package com.fionera.rxgank.dagger;
 
 import android.app.Application;
+import android.support.annotation.NonNull;
 
 import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.fionera.base.BaseApplication;
-import com.fionera.rxgank.BuildConfig;
 import com.fionera.rxgank.http.ApiService;
 import com.fionera.rxgank.http.HttpConstants;
 import com.fionera.rxgank.http.LogInterceptor;
@@ -60,12 +60,12 @@ public class AppModule {
             private final HashMap<HttpUrl, List<Cookie>> cookiesStore = new HashMap<>();
 
             @Override
-            public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
+            public void saveFromResponse(@NonNull HttpUrl url, @NonNull List<Cookie> cookies) {
                 cookiesStore.put(HttpUrl.parse(url.host()), cookies);
             }
 
             @Override
-            public List<Cookie> loadForRequest(HttpUrl url) {
+            public List<Cookie> loadForRequest(@NonNull HttpUrl url) {
                 List<Cookie> cookies = cookiesStore.get(HttpUrl.parse(url.host()));
                 return cookies == null ? new ArrayList<Cookie>() : cookies;
             }

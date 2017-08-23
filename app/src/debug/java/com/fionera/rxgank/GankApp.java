@@ -10,6 +10,7 @@ import com.fionera.rxgank.dagger.AppModule;
 import com.fionera.rxgank.dagger.DaggerAppComponent;
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 
+import cn.nekocode.resinspector.ResourceInspector;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import timber.log.Timber;
@@ -31,6 +32,7 @@ public class GankApp
         AppComponentHolder.setAppComponent(appComponent);
 
         Fresco.initialize(this);
+        ResourceInspector.initialize(this);
 
         Realm.init(this);
         RealmConfiguration realmConfiguration = new RealmConfiguration.Builder().schemaVersion(1)

@@ -3,7 +3,6 @@ package com.fionera.rxgank.dagger;
 import android.app.Application;
 
 import com.fionera.base.BaseApplication;
-import com.fionera.rxgank.BuildConfig;
 import com.fionera.rxgank.http.ApiService;
 import com.fionera.rxgank.http.HttpConstants;
 import com.fionera.rxgank.http.LogInterceptor;

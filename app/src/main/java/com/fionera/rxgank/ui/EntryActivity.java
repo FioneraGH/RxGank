@@ -35,8 +35,8 @@ public class EntryActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_entry);
 
-        ImageView ivSplashLogo = (ImageView) findViewById(R.id.iv_splash_logo);
-        TextView tvSplashName = (TextView) findViewById(R.id.tv_splash_name);
+        ImageView ivSplashLogo = findViewById(R.id.iv_splash_logo);
+        TextView tvSplashName = findViewById(R.id.tv_splash_name);
 
         saScaleX = createSpringAnimation(ivSplashLogo, SpringAnimation.SCALE_X, INITIAL_SCALE,
                 STIFFNESS, DAMPING_RATIO);

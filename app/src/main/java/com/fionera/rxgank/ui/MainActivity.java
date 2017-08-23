@@ -1,5 +1,6 @@
 package com.fionera.rxgank.ui;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -22,6 +23,7 @@ import com.hwangjr.rxbus.annotation.Subscribe;
 
 import java.util.concurrent.TimeUnit;
 
+import cn.nekocode.resinspector.ResourceInspector;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Predicate;
@@ -43,14 +45,20 @@ public class MainActivity
     private CommonImageView commonImageView;
 
     @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(newBase);
+        ResourceInspector.wrap(newBase);
+    }
+
+    @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         RxBus.get().register(this);
 
-        drawerLayout = (DrawerLayout) findViewById(R.id.dl_main);
-        final NavigationView navigationView = (NavigationView) findViewById(R.id.nv_main);
+        drawerLayout = findViewById(R.id.dl_main);
+        final NavigationView navigationView = findViewById(R.id.nv_main);
         commonImageView = (CommonImageView) navigationView.getHeaderView(0);
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {

@@ -30,7 +30,7 @@ public class ImageDetailActivity
                             ScalingUtils.ScaleType.CENTER_CROP));
         }
 
-        final SimpleDraweeView ivImageDetailPreview = (SimpleDraweeView) findViewById(R.id.iv_image_detail_preview);
+        final SimpleDraweeView ivImageDetailPreview = findViewById(R.id.iv_image_detail_preview);
         ivImageDetailPreview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
